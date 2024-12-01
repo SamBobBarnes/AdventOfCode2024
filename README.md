@@ -1,7 +1,7 @@
 # AdventOfCode 2024
 
-### Day 1 - TBD
-
+### Day 1 - 12/1
+🎁 🎁
 ### Day 2 - TBD
 
 ### Day 3 - TBD

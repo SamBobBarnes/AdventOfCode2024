@@ -53,7 +53,7 @@ public:
         std::cout << "\033[97m" << "Bright White" << "\033[0m" << " 97" << std::endl;
     }
 
-    static std::vector<std::string> readFile(const int day, const bool test) {
+    static std::vector<std::string> readFile(const int day, const bool test = false) {
         const std::string path = "Day" + std::to_string(day) + "/" + (test ? "test-" : "") + "input.txt";
         return readFile(path);
     }
@@ -61,7 +61,7 @@ public:
     static std::vector<std::string> readFile(const std::string &path, bool debug = false) {
         std::vector<std::string> lines{};
 #ifdef _WIN32
-        std::string backtrace = "/../../";
+        std::string backtrace = "/../";
 #else
         std::string backtrace = "/../";
 #endif
