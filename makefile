@@ -23,3 +23,9 @@ create:
 
 	git add .
 	git commit -m "Day${d} init"
+
+
+test:
+	cd inputs
+	git add .
+	git commit -m "Day${d} init"
