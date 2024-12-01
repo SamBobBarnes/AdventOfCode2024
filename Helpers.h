@@ -53,8 +53,8 @@ public:
         std::cout << "\033[97m" << "Bright White" << "\033[0m" << " 97" << std::endl;
     }
 
-    static std::vector<std::string> readFile(const int day, const bool test = false) {
-        const std::string path = "Day" + std::to_string(day) + "/" + (test ? "test-" : "") + "input.txt";
+    static std::vector<std::string> readFile(const int day, const bool example = false) {
+        const std::string path = "inputs/Day" + std::to_string(day) + (example ? "-example" : "") + ".txt";
         return readFile(path);
     }
 
