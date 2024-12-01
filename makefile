@@ -21,11 +21,7 @@ create:
 	sed -i '' 's://\#\#\#\#case:${MainCppCase}:g' ./main.cpp
 	sed -i '' -r 's:switch \([0-9]+\):switch (${d}):g' ./main.cpp
 
-	git add .
-	git commit -m "Day${d} init"
+	cd inputs && git add . && git commit -m "Day${d} inputs init"
 
-
-test:
-	cd inputs
 	git add .
 	git commit -m "Day${d} init"
