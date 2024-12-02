@@ -8,4 +8,12 @@ add_executable(2024 main.cpp
         Point.h
         Day1/Day1.h
         Day1/Part1.cpp
-        Day1/Part2.cpp)
+        Day1/Part2.cpp
+        Day2/Day2.h
+        Day2/Part1.cpp
+        Day2/Part2.cpp
+        Day3/Day3.h
+        Day3/Part1.cpp
+        Day3/Part2.cpp
+        ####
+)
