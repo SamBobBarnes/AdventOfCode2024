@@ -6,8 +6,22 @@
 #include "Day4.h"
 #include "../Point.h"
 
+void Print(vector<Point> points, const vector<string> *grid) {
+    for (int y = 0; y < grid->size(); ++y) {
+        for (int x = 0; x < (*grid)[0].length(); ++x) {
+            // auto it = find(points.begin(), points.end(), new Point{x, y});
+            if (ranges::find_if(points, [x,y](const Point &p) { return p.x == x && p.y == y; }) != points.end()) {
+                cout << "\033[31;4m" << (*grid)[y][x] << "\033[0m";
+            } else {
+                cout << (*grid)[y][x];
+            }
+        }
+        cout << endl;
+    }
+}
+
 int Day4::Part2() {
-    const auto wordSearch = Helpers::readFile(4, true);
+    const auto wordSearch = Helpers::readFile(4, false);
 
     int height = wordSearch.size();
     int width = wordSearch[0].length();
@@ -33,7 +47,7 @@ int Day4::Part2() {
         string down{};
         for (int y = 0; y < height; ++y) {
             up += wordSearch[height - y - 1][x];
-            pointMappings[0][{x, height - y - 1}] = {x, y};
+            pointMappings[0][{y, x}] = {x, height - y - 1};
             down += wordSearch[y][x];
             pointMappings[4][{x, y}] = {y, x};
         }
@@ -115,6 +129,11 @@ int Day4::Part2() {
         index++;
     }
 
+
+    // for (int i = 0; i < 8; ++i) {
+    //     cout << endl;
+    //     Print(points[i], &rotations[2]);
+    // }
     set<Point> rectifiedPoints[4]{{}, {}, {}, {}};
 
     rectifiedPoints[0].insert_range(points[2]);
@@ -122,8 +141,8 @@ int Day4::Part2() {
     rectifiedPoints[1].insert_range(points[0]);
     rectifiedPoints[1].insert_range(points[4]);
     rectifiedPoints[2].insert_range(points[1]);
-    rectifiedPoints[2].insert_range(points[3]);
-    rectifiedPoints[3].insert_range(points[5]);
+    rectifiedPoints[2].insert_range(points[5]);
+    rectifiedPoints[3].insert_range(points[3]);
     rectifiedPoints[3].insert_range(points[7]);
 
 
@@ -137,5 +156,6 @@ int Day4::Part2() {
                      rectifiedPoints[3].end(),
                      inserter(commonPoints[1], commonPoints[1].begin()));
 
+    total += commonPoints[1].size();
     return total;
 }
