@@ -1,4 +1,4 @@
-CMakeAddText=        Day${d}/Day${d}.h\n        Day${d}/Part1.cpp\n        Day${d}/Part2.cpp\n        Day${d}/Part3.cpp\n\#\#\#\#
+CMakeAddText=        Day${d}/Day${d}.h\n        Day${d}/Part1.cpp\n        Day${d}/Part2.cpp\n\#\#\#\#
 MainCppCase=        case ${d}\:\n            std\:\:cout << "Day ${d} - Part 1\: " << Day${d}\:\:Part1() << std\:\:endl;\n            std\:\:cout << "Day ${d} - Part 2\: " << Day${d}\:\:Part2() << std\:\:endl;\n            break;\n        //\#\#\#\#case
 create:
 	mkdir -p Day${d}
