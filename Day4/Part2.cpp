@@ -21,7 +21,7 @@ void Print(vector<Point> points, const vector<string> *grid) {
 }
 
 int Day4::Part2() {
-    const auto wordSearch = Helpers::readFile(4, false);
+    const auto wordSearch = Helpers::readFile(4);
 
     int height = wordSearch.size();
     int width = wordSearch[0].length();
@@ -63,7 +63,7 @@ int Day4::Part2() {
         string ul;
         int x{col}, y{0};
         while (x < width && y < height) {
-            ur += rotations[0][y][x]; //TODO: fix this
+            ur += rotations[0][y][x];
             pointMappings[1][{mx, my}] = pointMappings[0][{x, y}];
             dr += rotations[2][y][x];
             pointMappings[3][{mx, my}] = pointMappings[2][{x, y}];
