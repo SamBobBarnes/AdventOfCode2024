@@ -5,7 +5,7 @@
 #include "../Point.h"
 
 int Day4::Part1() {
-    const auto wordSearch = Helpers::readFile(4, false);
+    const auto wordSearch = Helpers::readFile(4);
 
     int height = wordSearch.size();
     int width = wordSearch[0].length();
