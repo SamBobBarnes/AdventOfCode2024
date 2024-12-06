@@ -22,6 +22,8 @@
 
 ### Day 6 - TBD
 
+⭐️
+
 ### Day 7 - TBD
 
 ### Day 8 - TBD
