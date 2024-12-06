@@ -24,5 +24,6 @@ add_executable(2024 main.cpp
 Day6/Day6.h
         Day6/Part1.cpp
         Day6/Part2.cpp
-####
+        Timer.h
+        ####
 )
