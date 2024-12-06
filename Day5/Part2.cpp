@@ -84,7 +84,9 @@ int Day5::Part2() {
 
     for (auto &job: invalidJobs) {
         vector<int> tempJob{};
-        tempJob.append_range(job);
+        for (auto i: job) {
+            tempJob.push_back(i);
+        }
         while (!ValidJob(&tempJob, &rules)) {
             auto indecies = InvalidIndex(&tempJob, &rules);
             int index = get<0>(indecies);

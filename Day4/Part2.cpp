@@ -1,7 +1,6 @@
 #include <regex>
 #include <set>
 #include <map>
-#include <__algorithm/ranges_set_intersection.h>
 
 #include "Day4.h"
 #include "../Point.h"
@@ -136,14 +135,30 @@ int Day4::Part2() {
     // }
     set<Point> rectifiedPoints[4]{{}, {}, {}, {}};
 
-    rectifiedPoints[0].insert_range(points[2]);
-    rectifiedPoints[0].insert_range(points[6]);
-    rectifiedPoints[1].insert_range(points[0]);
-    rectifiedPoints[1].insert_range(points[4]);
-    rectifiedPoints[2].insert_range(points[1]);
-    rectifiedPoints[2].insert_range(points[5]);
-    rectifiedPoints[3].insert_range(points[3]);
-    rectifiedPoints[3].insert_range(points[7]);
+    for (auto i: points[2]) {
+        rectifiedPoints[0].insert(i);
+    }
+    for (auto i: points[6]) {
+        rectifiedPoints[0].insert(i);
+    }
+    for (auto i: points[0]) {
+        rectifiedPoints[1].insert(i);
+    }
+    for (auto i: points[4]) {
+        rectifiedPoints[1].insert(i);
+    }
+    for (auto i: points[1]) {
+        rectifiedPoints[20].insert(i);
+    }
+    for (auto i: points[5]) {
+        rectifiedPoints[2].insert(i);
+    }
+    for (auto i: points[3]) {
+        rectifiedPoints[3].insert(i);
+    }
+    for (auto i: points[7]) {
+        rectifiedPoints[3].insert(i);
+    }
 
 
     set<Point> commonPoints[2]{{}, {}};
