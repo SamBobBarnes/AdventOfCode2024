@@ -14,9 +14,20 @@ int getPathDir(tuple<Point, Point> *path) {
     return 3; //left
 }
 
+void Print(const int width, const int height, set<Point> *points) {
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            Point current = {x, y};
+            if (ranges::find(*points, current) == points->end()) cout << ".";
+            else cout << "O";
+        }
+        cout << endl;
+    }
+}
+
 int Day6::Part2() {
     Timer timer{};
-    const auto lines = Helpers::readFile(6, true);
+    const auto lines = Helpers::readFile(6, false);
 
     vector<tuple<Point, Point> > paths{};
     vector<vector<bool> > layout{};
@@ -55,14 +66,12 @@ int Day6::Part2() {
         current = next;
     }
 
-    vector<Point> possibleLoops{};
+    set<Point> possibleLoops{};
 
+    index = 0;
     for (auto &i: paths) {
-        timer.Start("search-outer");
+        // timer.Start("search-outer");
         int currentDir = getPathDir(&i);
-        current = start;
-        if (CheckForOutOfBounds(width, height, &get<1>(i)))continue;
-        vector<tuple<Point, Point> > tempPaths{};
         if (currentDir == 0 || currentDir == 2) {
             int x = get<0>(i).x;
             for (int j = currentDir == 0 ? get<0>(i).y : get<1>(i).y;
@@ -70,7 +79,11 @@ int Day6::Part2() {
                            ? get<1>(i).y
                            : get<0>(i).y);
                  j--) {
+                if (start == *new Point{x, j} || CheckForOutOfBounds(width, height, new Point{x, j}))continue;
                 layout[j][x] = true;
+                current = start;
+                dir = 0;
+                vector<tuple<Point, Point> > tempPaths{};
 
                 while (!CheckForOutOfBounds(width, height, &current)) {
                     auto next = GetTurnPoint(&layout, dir, &current);
@@ -78,7 +91,7 @@ int Day6::Part2() {
                     if (dir == 4) dir = 0;
                     tuple<Point, Point> path{current, next};
                     if (ranges::find(tempPaths, path) != tempPaths.end()) {
-                        possibleLoops.emplace_back(x, j);
+                        possibleLoops.emplace(x, j);
                         break;
                     }
 
@@ -95,32 +108,39 @@ int Day6::Part2() {
                            ? get<1>(i).x
                            : get<0>(i).x);
                  j--) {
+                if (start == *new Point{j, y} || CheckForOutOfBounds(width, height, new Point{j, y}))continue;
                 layout[y][j] = true;
+                current = start;
+                dir = 0;
+                vector<tuple<Point, Point> > tempPaths{};
 
-                do {
+                while (!CheckForOutOfBounds(width, height, &current)) {
                     auto next = GetTurnPoint(&layout, dir, &current);
                     dir += 1;
                     if (dir == 4) dir = 0;
                     tuple<Point, Point> path{current, next};
                     if (ranges::find(tempPaths, path) != tempPaths.end()) {
-                        possibleLoops.emplace_back(j, y);
+                        possibleLoops.emplace(j, y);
                         break;
                     }
 
                     tempPaths.push_back(path);
 
                     current = next;
-                } while (!CheckForOutOfBounds(width, height, &current));
+                }
 
                 layout[y][j] = false;
             }
         }
 
 
-        timer.End("search-outer");
-        cout << "Search-outer: " << timer.GetTime("search-outer") << endl;
-        timer.Clear("search-outer");
+        // timer.End("search-outer");
+        // cout << "Search-outer: " << timer.GetTime("search-outer") << endl;
+        // timer.Clear("search-outer");
+        index++;
     }
 
-    return 0;
+    // Print(width, height, &possibeLoops);
+
+    return possibleLoops.size();
 }

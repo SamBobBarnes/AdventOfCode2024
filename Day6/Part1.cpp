@@ -6,7 +6,7 @@
 #include "../Timer.h"
 
 int Day6::Part1() {
-    const auto timer = new Timer();
+    Timer timer{};
     const auto lines = Helpers::readFile(6, false);
 
     vector<tuple<Point, Point> > paths{};
@@ -35,7 +35,7 @@ int Day6::Part1() {
     int height = lines.size();
 
     Point current = start;
-    timer->Start("while");
+    timer.Start("while");
     while (!CheckForOutOfBounds(width, height, &current)) {
         auto next = GetTurnPoint(&layout, dir, &current);
         dir += 1;
@@ -45,9 +45,9 @@ int Day6::Part1() {
 
         current = next;
     }
-    timer->End("while");
+    timer.End("while");
 
-    std::cout << timer->GetTime("while") << "ms\n";
+    // std::cout << timer.GetTime("while") << "ms\n";
 
     set<Point> steps{};
 
