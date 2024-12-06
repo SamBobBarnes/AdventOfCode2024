@@ -35,6 +35,15 @@ public:
         timers[label].push_back(t2);
     }
 
+    void Clear(const std::string &label) {
+        if (!timers.contains(label)) {
+            std::cerr << "TILT! Timer'" << label << "' does not exist";
+            throw;
+        }
+        const auto it = timers.find(label);
+        timers.erase(it);
+    }
+
     double GetTime(const std::string &label) {
         const std::chrono::duration<double, std::milli> ms_double = timers[label].back() - timers[label].front();
         return ms_double.count();
