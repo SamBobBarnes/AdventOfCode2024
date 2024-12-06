@@ -15,7 +15,7 @@ public:
     static int Part2();
 
     static bool CheckForOutOfBounds(const int width, const int height, const Point *current) {
-        return current->y == height || current->y == -1 || current->x == width || current->x == -1;
+        return current->y >= height || current->y == -1 || current->x >= width || current->x == -1;
     }
 
     static Point GetTurnPoint(const vector<vector<bool> > *grid, int dir, const Point *start) {
