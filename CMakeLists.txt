@@ -25,5 +25,8 @@ Day6/Day6.h
         Day6/Part1.cpp
         Day6/Part2.cpp
         Timer.h
-        ####
+        Day7/Day7.h
+        Day7/Part1.cpp
+        Day7/Part2.cpp
+####
 )
