@@ -34,6 +34,10 @@ private :
                 return a + b;
             case '*':
                 return a * b;
+            case '|':
+                int size = trunc(log10(b)) + 1;
+                long ten = powl(10, size);
+                return a * ten + b;
         }
     }
 };
@@ -42,24 +46,28 @@ class Day7 {
 public:
     static long Part1();
 
-    static int Part2();
+    static long Part2();
 
-    static bool SolveEquation(Equation e, char operators[]);
+    static bool SolveEquation(Equation e, const vector<char> &operators);
 };
 
-inline bool Day7::SolveEquation(Equation e, char operators[]) {
+inline bool Day7::SolveEquation(Equation e, const vector<char> &operators) {
     if (e.Full()) {
         return e.CorrectOperators();
     }
 
-    Equation e1 = e;
-    e1.Operators.push_back(operators[0]);
-    bool e1a = SolveEquation(e1, operators);
-    Equation e2 = e;
-    e2.Operators.push_back(operators[1]);
-    bool e2a = SolveEquation(e2, operators);
+    vector<bool> results{};
 
-    return e1a || e2a;
+    for (auto op: operators) {
+        Equation e1 = e;
+        e1.Operators.push_back(op);
+        results.push_back(SolveEquation(e1, operators));
+    }
+
+    for (const bool result: results) {
+        if (result) return true;
+    }
+    return false;
 }
 
 #endif //DAY7_H

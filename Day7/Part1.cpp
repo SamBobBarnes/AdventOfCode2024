@@ -4,7 +4,7 @@ long Day7::Part1() {
     const auto lines = Helpers::readFile(7, false);
 
     vector<Equation> equations{};
-    char operators[]{'+', '*'};
+    vector<char> operators{'+', '*'};
 
     for (const auto &line: lines) {
         vector<long> parts{};
