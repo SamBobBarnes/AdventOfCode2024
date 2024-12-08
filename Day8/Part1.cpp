@@ -4,19 +4,6 @@
 #include "Day8.h"
 #include "../Point.h"
 
-void Print(const vector<string> *lines, const set<Point> *antiNodes) {
-    cout << endl;
-    for (int y = 0; y < lines->size(); ++y) {
-        for (int x = 0; x < (*lines)[0].length(); ++x) {
-            if (antiNodes->contains({x, y}))
-                cout << '#';
-            else
-                cout << (*lines)[y][x];
-        }
-        cout << endl;
-    }
-}
-
 int Day8::Part1() {
     const auto lines = Helpers::readFile(8, false);
 
