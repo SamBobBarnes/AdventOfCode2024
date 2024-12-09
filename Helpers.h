@@ -95,11 +95,23 @@ public:
         return result;
     }
 
-    static std::vector<char> splitIntoChars(std::string input) {
+    static std::vector<char> splitIntoChars(const std::string &input) {
         std::vector<char> result{};
 
+        result.reserve(input.length());
         for (int i = 0; i < input.length(); ++i) {
             result.push_back(input[i]);
+        }
+
+        return result;
+    }
+
+    static std::vector<int> splitIntoInts(const std::string &input) {
+        std::vector<int> result{};
+
+        result.reserve(input.length());
+        for (int i = 0; i < input.length(); ++i) {
+            result.push_back(input[i] - '0');
         }
 
         return result;
