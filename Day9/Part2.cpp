@@ -55,7 +55,7 @@ long Day9::Part2() {
     while (current != nullptr) {
         for (auto &block: emptyBlocks) {
             if (!block.size) continue;
-            if (block.size >= current->size) {
+            if (block.size >= current->size && block.index < current->index) {
                 current->index = block.index;
                 block.size -= current->size;
                 block.index += current->size;
