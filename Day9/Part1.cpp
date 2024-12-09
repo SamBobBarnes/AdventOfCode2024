@@ -25,16 +25,6 @@ int LastBlockElement(const vector<int> *disk, const int lastI) {
     return -1;
 }
 
-long CalculateChecksum(const vector<int> *disk) {
-    long total{0};
-
-    for (int i = 0; i < disk->size(); i++) {
-        if ((*disk)[i] == -1) return total;
-        total += i * (*disk)[i];
-    }
-    return total;
-}
-
 long Day9::Part1() {
     const auto lines = Helpers::readFile(9, false);
     const auto input = Helpers::splitIntoInts(lines[0]);
