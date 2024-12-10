@@ -34,5 +34,8 @@ Day8/Day8.h
 Day9/Day9.h
         Day9/Part1.cpp
         Day9/Part2.cpp
+Day10/Day10.h
+        Day10/Part1.cpp
+        Day10/Part2.cpp
 ####
 )

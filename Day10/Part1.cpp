@@ -1,0 +1,7 @@
+#include "Day10.h"
+
+int Day10::Part1() {
+    const auto lines = Helpers::readFile(10, true);
+
+    return 0;
+}
