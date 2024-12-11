@@ -9,7 +9,7 @@ class Day11 {
 public:
     static long long Part1();
 
-    static int Part2();
+    static long long Part2();
 };
 
 #endif //DAY11_H
