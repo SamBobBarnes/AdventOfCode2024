@@ -43,5 +43,6 @@ Day11/Day11.h
 Day12/Day12.h
         Day12/Part1.cpp
         Day12/Part2.cpp
+        Day12/GardenPlot.h
 ####
 )
