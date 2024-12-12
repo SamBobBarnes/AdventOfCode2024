@@ -14,6 +14,8 @@ struct GardenPlot {
   Point Position;
   int group{-1};
 
+  bool Perimeters[4]{};
+
   [[nodiscard]] bool hasGroup() const {
     return group >= 0;
   }
