@@ -23,6 +23,8 @@
 
 class Helpers {
 public:
+    static constexpr int Max = std::numeric_limits<int>::max();
+
     static std::string pwd() {
         char cCurrentPath[FILENAME_MAX];
 

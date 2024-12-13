@@ -21,31 +21,32 @@ add_executable(2024 main.cpp
         Day5/Day5.h
         Day5/Part1.cpp
         Day5/Part2.cpp
-Day6/Day6.h
+        Day6/Day6.h
         Day6/Part1.cpp
         Day6/Part2.cpp
         Timer.h
         Day7/Day7.h
         Day7/Part1.cpp
         Day7/Part2.cpp
-Day8/Day8.h
+        Day8/Day8.h
         Day8/Part1.cpp
         Day8/Part2.cpp
-Day9/Day9.h
+        Day9/Day9.h
         Day9/Part1.cpp
         Day9/Part2.cpp
-Day10/Day10.h
+        Day10/Day10.h
         Day10/Part1.cpp
         Day10/Part2.cpp
-Day11/Day11.h
+        Day11/Day11.h
         Day11/Part1.cpp
         Day11/Part2.cpp
-Day12/Day12.h
+        Day12/Day12.h
         Day12/Part1.cpp
         Day12/Part2.cpp
         Day12/GardenPlot.h
-Day13/Day13.h
+        Day13/Day13.h
         Day13/Part1.cpp
         Day13/Part2.cpp
-####
+        Day13/ClawMachine.h
+        ####
 )
