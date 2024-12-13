@@ -22,6 +22,8 @@ public:
         by = stoi(bInfo[3].substr(2, bInfo[3].length() - 2));
         prizeX = stoi(prizeInfo[1].substr(2, prizeInfo[1].length() - 3));
         prizeY = stoi(prizeInfo[2].substr(2, prizeInfo[2].length() - 2));
+        prizeX2 = stoi(prizeInfo[1].substr(2, prizeInfo[1].length() - 3)) + 10000000000000;
+        prizeY2 = stoi(prizeInfo[2].substr(2, prizeInfo[2].length() - 2)) + 10000000000000;
     }
 
     int ax;
@@ -30,6 +32,8 @@ public:
     int by;
     int prizeX;
     int prizeY;
+    long long prizeX2;
+    long long prizeY2;
 };
 
 
