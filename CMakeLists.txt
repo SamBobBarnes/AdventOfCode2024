@@ -48,5 +48,11 @@ add_executable(2024 main.cpp
         Day13/Part1.cpp
         Day13/Part2.cpp
         Day13/ClawMachine.h
-        ####
+        Day13/Day13.h
+        Day13/Part1.cpp
+        Day13/Part2.cpp
+Day14/Day14.h
+        Day14/Part1.cpp
+        Day14/Part2.cpp
+####
 )

@@ -1,15 +1,15 @@
-#ifndef DAY13_H
-#define DAY13_H
+#ifndef DAY14_H
+#define DAY14_H
 
 #include "../Helpers.h"
 
 using namespace std;
 
-class Day13 {
+class Day14 {
 public:
     static int Part1();
 
     static int Part2();
 };
 
-#endif //DAY13_H
+#endif //DAY14_H
