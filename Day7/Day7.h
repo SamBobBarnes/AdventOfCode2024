@@ -39,6 +39,7 @@ private :
                 long ten = powl(10, size);
                 return a * ten + b;
         }
+        return -1;
     }
 };
 

@@ -84,10 +84,6 @@ int main() {
             std::cout << "Day 13 - Part 1: " << Day13::Part1() << std::endl;
             std::cout << "Day 13 - Part 2: " << Day13::Part2() << std::endl;
             break;
-        case 13:
-            std::cout << "Day 13 - Part 1: " << Day13::Part1() << std::endl;
-            std::cout << "Day 13 - Part 2: " << Day13::Part2() << std::endl;
-            break;
         case 14:
             std::cout << "Day 14 - Part 1: " << Day14::Part1() << std::endl;
             std::cout << "Day 14 - Part 2: " << Day14::Part2() << std::endl;
