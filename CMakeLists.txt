@@ -55,5 +55,8 @@ add_executable(2024 main.cpp
         Day14/Part1.cpp
         Day14/Part2.cpp
         Day14/Robot.h
+Day15/Day15.h
+        Day15/Part1.cpp
+        Day15/Part2.cpp
 ####
 )
