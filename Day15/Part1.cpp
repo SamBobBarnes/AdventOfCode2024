@@ -1,6 +1,3 @@
-#include <functional>
-#include <stddef.h>
-
 #include "Day15.h"
 #include "../Point.h"
 
