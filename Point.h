@@ -32,6 +32,14 @@ struct Point {
         return x == other.x && y == other.y;
     }
 
+    friend Point operator+(Point lhs, // passing lhs by value helps optimize chained a+b+c
+                           const Point &rhs) // otherwise, both parameters may be const references
+    {
+        lhs.x += rhs.x; // reuse compound assignment
+        lhs.y += rhs.y;
+        return lhs; // return the result by value (uses move constructor)
+    }
+
     int x;
     int y;
 };
