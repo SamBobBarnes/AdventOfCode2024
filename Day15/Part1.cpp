@@ -1,20 +1,6 @@
 #include "Day15.h"
 #include "../Point.h"
 
-void Print(const vector<vector<Day15::WH> > *warehouse) {
-    cout << endl;
-    for (int y = 0; y < warehouse->size(); ++y) {
-        for (int x = 0; x < (*warehouse)[0].size(); ++x) {
-            if ((*warehouse)[y][x] == Day15::WH::Box)
-                cout << 'O';
-            else if ((*warehouse)[y][x] == Day15::WH::Wall)
-                cout << '#';
-            else cout << '.';
-        }
-        cout << endl;
-    }
-}
-
 int Day15::Part1() {
     const auto lines = Helpers::readFile(15, false);
 

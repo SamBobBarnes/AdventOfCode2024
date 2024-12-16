@@ -21,8 +21,28 @@ public:
     enum WH {
         Box,
         Wall,
-        Floor
+        Floor,
+        BoxL,
+        BoxR
     };
+
+    static void Print(const vector<vector<WH> > *warehouse) {
+        cout << endl;
+        for (int y = 0; y < warehouse->size(); ++y) {
+            for (int x = 0; x < (*warehouse)[0].size(); ++x) {
+                if ((*warehouse)[y][x] == Box)
+                    cout << 'O';
+                else if ((*warehouse)[y][x] == BoxL)
+                    cout << '[';
+                else if ((*warehouse)[y][x] == BoxR)
+                    cout << ']';
+                else if ((*warehouse)[y][x] == Wall)
+                    cout << '#';
+                else cout << '.';
+            }
+            cout << endl;
+        }
+    }
 };
 
 #endif //DAY15_H
