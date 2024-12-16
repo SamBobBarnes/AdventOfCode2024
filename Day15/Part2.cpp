@@ -1,60 +1,62 @@
+#include <_xlocale.h>
+
 #include "Day15.h"
 #include "../Point.h"
 
 int Day15::Part2() {
-    const auto lines = Helpers::readFile(15, true);
+    const auto lines = Helpers::readFile(15, false);
 
     Point robot;
     vector<vector<WH> > warehouse{};
     vector<Dir> instructions{};
 
-    bool readingInstrs{false};
+    bool readingInstrs{false}; {
+        int x{0};
+        int y{0};
 
-    int x{0};
-    int y{0};
-
-    for (auto line: lines) {
-        if (line == "") {
-            readingInstrs = true;
-            continue;
-        }
-
-        if (readingInstrs) {
-            for (auto dir: line) {
-                if (dir == '>') instructions.push_back(Dir::Right);
-                else if (dir == '<')instructions.push_back(Dir::Left);
-                else if (dir == '^')instructions.push_back(Dir::Up);
-                else if (dir == 'v')instructions.push_back(Dir::Down);
+        for (auto line: lines) {
+            if (line == "") {
+                readingInstrs = true;
+                continue;
             }
-        } else {
-            vector<WH> row{};
-            for (auto cell: line) {
-                if (cell == '#') {
-                    row.push_back(Wall);
-                    row.push_back(Wall);
-                } else if (cell == 'O') {
-                    row.push_back(BoxL);
-                    row.push_back(BoxR);
-                } else if (cell == '.') {
-                    row.push_back(Floor);
-                    row.push_back(Floor);
-                } else if (cell == '@') {
-                    row.push_back(Floor);
-                    row.push_back(Floor);
-                    robot = {x * 2, y};
+
+            if (readingInstrs) {
+                for (auto dir: line) {
+                    if (dir == '>') instructions.push_back(Right);
+                    else if (dir == '<')instructions.push_back(Left);
+                    else if (dir == '^')instructions.push_back(Up);
+                    else if (dir == 'v')instructions.push_back(Down);
                 }
-                x++;
+            } else {
+                vector<WH> row{};
+                for (auto cell: line) {
+                    if (cell == '#') {
+                        row.push_back(Wall);
+                        row.push_back(Wall);
+                    } else if (cell == 'O') {
+                        row.push_back(BoxL);
+                        row.push_back(BoxR);
+                    } else if (cell == '.') {
+                        row.push_back(Floor);
+                        row.push_back(Floor);
+                    } else if (cell == '@') {
+                        row.push_back(Floor);
+                        row.push_back(Floor);
+                        robot = {x * 2, y};
+                    }
+                    x++;
+                }
+                warehouse.push_back(row);
+                y++;
+                x = 0;
             }
-            warehouse.push_back(row);
-            y++;
-            x = 0;
         }
+        // Print(&warehouse, robot);
     }
-    Print(&warehouse);
 
 
     auto moveBox = [](const int x, const int y, const Dir dir, vector<vector<WH> > *warehouse,
-                      auto &moveBoxRef) -> bool {
+                      auto &moveBoxRef, bool execute = true) -> bool {
         bool left = (*warehouse)[y][x] == BoxL;
         int tempY = y;
         int tempXL = left ? x : x - 1;
@@ -80,31 +82,61 @@ int Day15::Part2() {
             case Up:
             case Down:
                 if ((*warehouse)[tempY][tempXL] == Floor && (*warehouse)[tempY][tempXR] == Floor) {
-                    (*warehouse)[y][x] = Floor;
-                    if (left)
-                        (*warehouse)[y][x + 1] = Floor;
-                    else
-                        (*warehouse)[y][x - 1] = Floor;
-                    (*warehouse)[tempY][tempXL] = BoxL;
-                    (*warehouse)[tempY][tempXR] = BoxR;
-
+                    if (execute) {
+                        (*warehouse)[y][x] = Floor;
+                        if (left)
+                            (*warehouse)[y][x + 1] = Floor;
+                        else
+                            (*warehouse)[y][x - 1] = Floor;
+                        (*warehouse)[tempY][tempXL] = BoxL;
+                        (*warehouse)[tempY][tempXR] = BoxR;
+                    }
                     return true;
                 }
 
                 if ((*warehouse)[tempY][tempXL] == BoxL || (*warehouse)[tempY][tempXL] == BoxR ||
                     (*warehouse)[tempY][tempXR] == BoxL) {
                     if ((*warehouse)[tempY][tempXL] == BoxL) {
-                        return moveBoxRef(tempXL, tempY, dir, warehouse, moveBoxRef);
+                        if (moveBoxRef(tempXL, tempY, dir, warehouse, moveBoxRef)) {
+                            if (execute) {
+                                (*warehouse)[y][x] = Floor;
+                                if (left)
+                                    (*warehouse)[y][x + 1] = Floor;
+                                else
+                                    (*warehouse)[y][x - 1] = Floor;
+                                (*warehouse)[tempY][tempXL] = BoxL;
+                                (*warehouse)[tempY][tempXR] = BoxR;
+                            }
+                            return true;
+                        }
+                        return false;
                     }
 
                     bool canMove{true};
                     if ((*warehouse)[tempY][tempXL] == BoxR) {
-                        canMove = moveBoxRef(tempXL - 1, tempY, dir, warehouse, moveBoxRef);
+                        canMove = moveBoxRef(tempXL - 1, tempY, dir, warehouse, moveBoxRef, false);
                     }
                     if ((*warehouse)[tempY][tempXR] == BoxL) {
-                        canMove = canMove && moveBoxRef(tempXR, tempY, dir, warehouse, moveBoxRef);
+                        canMove = canMove && moveBoxRef(tempXR, tempY, dir, warehouse, moveBoxRef, false);
                     }
-                    return canMove;
+                    if (canMove) {
+                        if ((*warehouse)[tempY][tempXL] == BoxR) {
+                            moveBoxRef(tempXL - 1, tempY, dir, warehouse, moveBoxRef, true);
+                        }
+                        if ((*warehouse)[tempY][tempXR] == BoxL) {
+                            moveBoxRef(tempXR, tempY, dir, warehouse, moveBoxRef, true);
+                        }
+                        if (execute) {
+                            (*warehouse)[y][x] = Floor;
+                            if (left)
+                                (*warehouse)[y][x + 1] = Floor;
+                            else
+                                (*warehouse)[y][x - 1] = Floor;
+                            (*warehouse)[tempY][tempXL] = BoxL;
+                            (*warehouse)[tempY][tempXR] = BoxR;
+                        }
+                        return true;
+                    }
                 }
                 return false;
             case Left:
@@ -162,6 +194,8 @@ int Day15::Part2() {
 
         if (warehouse[tempPos.y][tempPos.x] == Floor) {
             robot = tempPos;
+            // cout << endl << inst;
+            // Print(&warehouse, robot);
             continue;
         }
         if (warehouse[tempPos.y][tempPos.x] == BoxL || warehouse[tempPos.y][tempPos.x] == BoxR) {
@@ -169,16 +203,20 @@ int Day15::Part2() {
                 robot = tempPos;
             }
         }
-        Print(&warehouse);
+        // cout << endl << inst;
+        // Print(&warehouse, robot);
     }
 
-    Print(&warehouse);
+    Print(&warehouse, robot);
 
     int total{0};
 
+    int width = warehouse[0].size();
+
     for (int y = 0; y < warehouse.size(); ++y) {
         for (int x = 0; x < warehouse[0].size(); ++x) {
-            if (warehouse[y][x] == Box) total += 100 * y + x;
+            if (warehouse[y][x] == BoxL)
+                total += 100 * y + x;
         }
     }
 

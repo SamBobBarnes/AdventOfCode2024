@@ -2,6 +2,7 @@
 #define DAY15_H
 
 #include "../Helpers.h"
+#include "../Point.h"
 
 using namespace std;
 
@@ -26,11 +27,13 @@ public:
         BoxR
     };
 
-    static void Print(const vector<vector<WH> > *warehouse) {
+    static void Print(const vector<vector<WH> > *warehouse, const Point robot = {0, 0}) {
         cout << endl;
         for (int y = 0; y < warehouse->size(); ++y) {
             for (int x = 0; x < (*warehouse)[0].size(); ++x) {
-                if ((*warehouse)[y][x] == Box)
+                if (robot.x == x && robot.y == y)
+                    cout << '@';
+                else if ((*warehouse)[y][x] == Box)
                     cout << 'O';
                 else if ((*warehouse)[y][x] == BoxL)
                     cout << '[';
