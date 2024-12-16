@@ -14,22 +14,30 @@ int Day16::Part2() {
     const int height = lines.size();
     const int width = lines[0].length();
 
-    map<Point, set<Point> > prev{};
+    map<Point, Point> prev{};
+    map<Point, set<Point> > pred{};
     map<Point, int> dist{};
+    map<Point, int> pathCount{};
 
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             if (lines[y][x] == 'E') {
                 end = {x, y};
                 prev[{x, y}] = {};
+                pred[{x, y}] = {};
+                pathCount[{x, y}] = 0;
                 dist[{x, y}] = Helpers::Max;
             } else if (lines[y][x] == 'S') {
                 start = {x, y};
                 prev[{x, y}] = {};
+                pred[{x, y}] = {};
                 dist[{x, y}] = 0;
+                pathCount[{x, y}] = 1;
             } else if (lines[y][x] == '.') {
                 prev[{x, y}] = {};
+                pred[{x, y}] = {};
                 dist[{x, y}] = Helpers::Max;
+                pathCount[{x, y}] = 0;
             }
         }
     }
@@ -37,15 +45,14 @@ int Day16::Part2() {
     priority_queue<PointScore> q{};
     q.emplace(start, 0, 1);
 
+
     int endLength = -1;
 
     while (!q.empty()) {
         auto u = q.top();
-        if (u == end) {
-            if (endLength < 0) endLength = u.Score;
-            if (u.Score > endLength)
-                break;
-        }
+        // if (u == end) {
+        //     break;
+        // }
         q.pop();
 
         bool dirs[4]{
@@ -110,13 +117,16 @@ int Day16::Part2() {
             }
 
             auto alt = dist[u] + 1 + 1000 * dirScoreAdj; // add more if turn is required
-            if (alt <= dist[v]) {
+            if (alt < dist[v]) {
                 prev[v] = {static_cast<Point>(u)};
+                prev[v] = static_cast<Point>(u);
                 dist[v] = alt;
+                pathCount[v] = pathCount[static_cast<Point>(u)];
                 q.emplace(v, alt, i);
             }
             if (alt == dist[v]) {
-                prev[v].insert(static_cast<Point>(u));
+                pathCount[v] += pathCount[static_cast<Point>(u)];
+                pred[v].insert(static_cast<Point>(u));
             }
         }
     }
@@ -130,7 +140,7 @@ int Day16::Part2() {
         auto p = q2.front();
         q2.pop();
         seats.insert(p);
-        q2.push_range(prev[p]);
+        q2.push_range(pred[p]);
     }
 
     return seats.size();
