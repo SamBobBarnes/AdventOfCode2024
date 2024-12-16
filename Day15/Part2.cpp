@@ -41,7 +41,7 @@ int Day15::Part2() {
                 } else if (cell == '@') {
                     row.push_back(Floor);
                     row.push_back(Floor);
-                    robot = {x, y};
+                    robot = {x * 2, y};
                 }
                 x++;
             }
@@ -60,9 +60,25 @@ int Day15::Part2() {
         int tempXL = left ? x : x - 1;
         int tempXR = left ? x + 1 : x;
         switch (dir) {
+            case Down:
+                tempY += 1;
+                break;
             case Up:
                 tempY -= 1;
+                break;
+            case Right:
+                tempXL += 1;
+                tempXR += 1;
+                break;
+            case Left:
+                tempXL -= 1;
+                tempXR -= 1;
+                break;
+        }
 
+        switch (dir) {
+            case Up:
+            case Down:
                 if ((*warehouse)[tempY][tempXL] == Floor && (*warehouse)[tempY][tempXR] == Floor) {
                     (*warehouse)[y][x] = Floor;
                     if (left)
@@ -83,7 +99,7 @@ int Day15::Part2() {
 
                     bool canMove{true};
                     if ((*warehouse)[tempY][tempXL] == BoxR) {
-                        canMove = canMove && moveBoxRef(tempXL - 1, tempY, dir, warehouse, moveBoxRef);
+                        canMove = moveBoxRef(tempXL - 1, tempY, dir, warehouse, moveBoxRef);
                     }
                     if ((*warehouse)[tempY][tempXR] == BoxL) {
                         canMove = canMove && moveBoxRef(tempXR, tempY, dir, warehouse, moveBoxRef);
@@ -91,28 +107,38 @@ int Day15::Part2() {
                     return canMove;
                 }
                 return false;
-            case Right:
-                tempXL += 1;
-                tempXR += 1;
-
-            //check for floor
-            //check for blocks
-
-                return false;
-            case Down:
-                tempY += 1;
-
-            //check for floor
-            //check for blocks
-
-                return false;
             case Left:
-                tempXL -= 1;
-                tempXR -= 1;
 
-            //check for floor
-            //check for blocks
-
+                if ((*warehouse)[tempY][tempXL] == Floor) {
+                    (*warehouse)[tempY][tempXL] = BoxL;
+                    (*warehouse)[tempY][tempXR] = BoxR;
+                    (*warehouse)[tempY][tempXR + 1] = Floor;
+                    return true;
+                }
+                if ((*warehouse)[tempY][tempXL] == BoxR) {
+                    if (moveBoxRef(tempXL, tempY, dir, warehouse, moveBoxRef)) {
+                        (*warehouse)[tempY][tempXL] = BoxL;
+                        (*warehouse)[tempY][tempXR] = BoxR;
+                        (*warehouse)[tempY][tempXR + 1] = Floor;
+                        return true;
+                    }
+                }
+                return false;
+            case Right:
+                if ((*warehouse)[tempY][tempXR] == Floor) {
+                    (*warehouse)[tempY][tempXL] = BoxL;
+                    (*warehouse)[tempY][tempXR] = BoxR;
+                    (*warehouse)[tempY][tempXL - 1] = Floor;
+                    return true;
+                }
+                if ((*warehouse)[tempY][tempXR] == BoxL) {
+                    if (moveBoxRef(tempXR, tempY, dir, warehouse, moveBoxRef)) {
+                        (*warehouse)[tempY][tempXL] = BoxL;
+                        (*warehouse)[tempY][tempXR] = BoxR;
+                        (*warehouse)[tempY][tempXL - 1] = Floor;
+                        return true;
+                    }
+                }
                 return false;
         }
         return false;
@@ -143,8 +169,10 @@ int Day15::Part2() {
                 robot = tempPos;
             }
         }
-        // Print(&warehouse);
+        Print(&warehouse);
     }
+
+    Print(&warehouse);
 
     int total{0};
 
