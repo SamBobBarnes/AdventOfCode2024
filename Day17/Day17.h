@@ -7,7 +7,7 @@ using namespace std;
 
 class Day17 {
 public:
-    static int Part1();
+    static string Part1();
 
     static int Part2();
 };
