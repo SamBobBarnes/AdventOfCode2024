@@ -1,11 +1,11 @@
 #include "Day17.h"
 
 string Day17::Part1() {
-    int Registers[3]{};
+    vector<int> Registers{0, 0, 0};
     int PC = 0;
     string output{};
 
-    auto combo = [Registers](const int operand) {
+    auto combo = [](const int operand, const vector<int> *registers) {
         switch (operand) {
             case 0:
             case 1:
@@ -13,11 +13,11 @@ string Day17::Part1() {
             case 3:
                 return operand;
             case 4:
-                return Registers[0];
+                return (*registers)[0];
             case 5:
-                return Registers[1];
+                return (*registers)[1];
             case 6:
-                return Registers[2];
+                return (*registers)[2];
             default:
                 cerr << "TILT! " << operand << " is not a valid operand!";
                 return -1;
@@ -36,43 +36,65 @@ string Day17::Part1() {
         cdv = 7 // C = A / (pow(2,cx))
     };
 
-    auto execute = [combo](const Op op, const int operand, int *registers[3], int &pc, string &output) {
+    auto execute = [combo](const Op op, const int operand, vector<int> *registers, int &pc, string &output,
+                           bool debug = false) {
+        int *A = &(*registers)[0];
+        int *B = &(*registers)[1];
+        int *C = &(*registers)[2];
+        int cx = combo(operand, registers);
+        int x = operand;
         switch (op) {
             case adv:
-                (*registers)[0] = (*registers)[0] / pow(2, combo(operand));
+                if (debug) cout << "A = " << *A << " / pow(2," << cx << ") = ";
+                *A = *A / pow(2, cx);
+                if (debug) cout << *A << endl;
                 pc += 2;
                 break;
             case bxl:
-                (*registers)[1] = (*registers)[1] ^ operand;
+                if (debug) cout << "B = " << *B << " ^ " << x;
+                *B = *B ^ operand;
+                if (debug) cout << " = " << *B << endl;
                 pc += 2;
                 break;
             case bst:
-                (*registers)[1] = combo(operand) % 8;
+                *B = cx % 8;
+                if (debug) cout << "B = " << cx << " % 8 = " << *B << endl;
                 pc += 2;
                 break;
             case jnz:
-                if ((*registers)[0] > 0) pc = operand;
+                if (*A > 0) {
+                    pc = operand;
+                    if (debug) cout << "Jump to = " << x << endl;
+                } else {
+                    if (debug) cout << "Dont Jump" << endl;
+                    pc += 2;
+                }
                 break;
             case bxc:
-                (*registers)[1] = (*registers)[1] ^ (*registers)[2];
+                if (debug) cout << "B = " << *B << " ^ " << *C;
+                *B = *B ^ *C;
+                if (debug) cout << " = " << *B << endl;
                 pc += 2;
                 break;
             case out:
-                output += combo(operand) % 8;
+                output += "," + to_string(cx % 8);
+                if (debug) cout << "Output: " << cx << " % 8 = " << cx % 8 << endl;
                 pc += 2;
                 break;
             case bdv:
-                (*registers)[1] = (*registers)[0] / pow(2, combo(operand));
+                *B = *A / pow(2, cx);
+                if (debug) cout << "B = " << *A << " / pow(2," << cx << ") = " << *B << endl;
                 pc += 2;
                 break;
             case cdv:
-                (*registers)[2] = (*registers)[0] / pow(2, combo(operand));
+                *C = *A / pow(2, cx);
+                if (debug) cout << "C = " << *A << " / pow(2," << cx << ") = " << *C << endl;
                 pc += 2;
                 break;
         }
     };
 
-    const auto lines = Helpers::readFile(17, true);
+    const auto lines = Helpers::readFile(17, false);
 
     Registers[0] = stoi(lines[0].substr(12));
     Registers[1] = stoi(lines[1].substr(12));
@@ -91,9 +113,13 @@ string Day17::Part1() {
 
     int programLength = program.size();
 
+    // cout << endl;
     while (PC < programLength) {
-        execute(static_cast<Op>(program[PC]), program[PC + 1], &Registers, PC, output);
+        Op op = static_cast<Op>(program[PC]);
+        int operand = program[PC + 1];
+        execute(op, operand, &Registers, PC, output);
     }
+    // cout << endl;
 
-    return output;
+    return output.substr(1);
 }
