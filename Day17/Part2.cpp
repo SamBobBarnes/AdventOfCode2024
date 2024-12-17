@@ -32,7 +32,28 @@ int Day17::Part2() {
         cdv = 7 // C = A / (pow(2,cx))
     };
 
-    auto execute = [combo](const Op op, const int operand, vector<long> *registers, int &pc, vector<int> *output,
+    auto DV = [](long A, long cx)-> long {
+        return A / powl(2, cx);
+    };
+
+    auto BXL = [](long B, int x)-> long {
+        return B ^ x;
+    };
+
+    auto BST = [](long cx)-> long {
+        return cx % 8;
+    };
+
+    auto BXC = [](long B, long C)-> long {
+        return B ^ C;
+    };
+
+    auto OUT = [](long cx)-> int {
+        return cx % 8;
+    };
+
+    auto execute = [combo](const Op op, const int operand, vector<long> *registers, int &pc,
+                           vector<int> *output,
                            bool debug = false) {
         long *A = &(*registers)[0];
         long *B = &(*registers)[1];
@@ -123,10 +144,21 @@ int Day17::Part2() {
     int programLength = program.size();
     int index = -1;
 
+
     int current = 0;
 
-    const long A = 4;
+    const long A = 1526138149;
     auto result = run(A, &program);
+
+    // int A = 5;
+
+    long B = BST(A);
+    long B2 = BXL(B, 1);
+    long C = DV(A, B2);
+    long A1 = DV(A, 3);
+    long B3 = BXL(B2, 4);
+    long B4 = BXC(B3, C);
+    long O = OUT(B4);
 
     vector<int> possibles{};
 
@@ -137,8 +169,16 @@ int Day17::Part2() {
         for (int j = bottom; j <= top; j++) {
             if (j == 0) continue;
             int A = j;
-            int result = ((((A % 8) ^ 4) ^ 4) ^ (int) (A / pow(2, ((A % 8) ^ 4)))) % 8;
-            // cout << result << endl;
+
+            long B = BST(A);
+            long B2 = BXL(B, 1);
+            long C = DV(A, B2);
+            long A1 = DV(A, 3);
+            long B3 = BXL(B2, 4);
+            long B4 = BXC(B3, C);
+            long O = OUT(B4);
+            int result = O;
+            cout << result << endl;
             if (result == program[i]) {
                 current = A;
                 break;
