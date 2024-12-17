@@ -46,13 +46,15 @@ int Day16::Part2() {
     q.emplace(start, 0, 1);
 
 
-    int endLength = -1;
+    int endCount = 0;
 
     while (!q.empty()) {
         auto u = q.top();
-        // if (u == end) {
-        //     break;
-        // }
+        if (u == end) {
+            endCount++;
+            if (endCount == 10)
+                break;
+        }
         q.pop();
 
         bool dirs[4]{
