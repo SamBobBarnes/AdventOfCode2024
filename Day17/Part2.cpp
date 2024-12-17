@@ -1,8 +1,6 @@
 #include "Day17.h"
 
 int Day17::Part2() {
-    string output{};
-
     auto combo = [](const int operand, const vector<long> *registers) -> long {
         switch (operand) {
             case 0:
@@ -34,7 +32,7 @@ int Day17::Part2() {
         cdv = 7 // C = A / (pow(2,cx))
     };
 
-    auto execute = [combo](const Op op, const int operand, vector<long> *registers, int &pc, string &output,
+    auto execute = [combo](const Op op, const int operand, vector<long> *registers, int &pc, vector<int> *output,
                            bool debug = false) {
         long *A = &(*registers)[0];
         long *B = &(*registers)[1];
@@ -75,7 +73,7 @@ int Day17::Part2() {
                 pc += 2;
                 break;
             case out:
-                output += "," + to_string(cx % 8);
+                output->push_back(cx % 8);
                 if (debug) cout << "Output: " << cx << " % 8 = " << cx % 8 << endl;
                 pc += 2;
                 break;
@@ -103,15 +101,16 @@ int Day17::Part2() {
         return program;
     };
 
-    auto run = [execute](const int A, vector<int> *program, string &out) {
+    auto run = [execute](const int A, vector<int> *program)-> vector<int> {
         vector<long> Registers{A, 0, 0};
         int PC = 0;
-        out = "";
+        vector<int> out{};
         while (PC < program->size()) {
             const Op op = static_cast<Op>((*program)[PC]);
             const int operand = (*program)[PC + 1];
-            execute(op, operand, &Registers, PC, out);
+            execute(op, operand, &Registers, PC, &out);
         }
+        return out;
     };
     auto program = loadProgram();
     string programString = "";
@@ -119,29 +118,31 @@ int Day17::Part2() {
         programString += "," + to_string(i);
     }
 
+    vector<int> output{};
+
     int programLength = program.size();
     int index = -1;
-    while (output.length() < programLength * 2) {
-        index++;
-        const long A = powl(2, index);
-        run(A, &program, output);
+
+    int current = 0;
+
+    for (int i = 0; i < programLength; i++) {
+        auto equals = [program](vector<int> *output, const int upTo)-> bool {
+            for (int j = 0; j <= upTo; j++) {
+                if ((*output)[j] != program[j]) return false;
+            }
+            return true;
+        };
+        do {
+            index++;
+            const long A = current + index;
+            auto result = run(A, &program);
+            output = result;
+        } while (!equals(&output, i));
+
+        current += index;
+        index = -1;
     }
-    long lowBar = powl(2, index);
-    while (output.length() <= programLength * 2) {
-        index++;
-        const long A = powl(2, index);
-        run(A, &program, output);
-    }
-    long highBar = powl(2, index) - 1;
-    long diff = highBar - lowBar;
-    index = 0;
-    do {
-        index++;
-        const long A = lowBar + index;
-        run(A, &program, output);
-        if (output == programString) break;
-    } while (index < diff);
 
 
-    return lowBar + index;
+    return current;
 }
