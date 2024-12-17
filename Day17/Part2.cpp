@@ -125,22 +125,25 @@ int Day17::Part2() {
 
     int current = 0;
 
-    for (int i = 0; i < programLength; i++) {
-        auto equals = [program](vector<int> *output, const int upTo)-> bool {
-            for (int j = 0; j <= upTo; j++) {
-                if ((*output)[j] != program[j]) return false;
-            }
-            return true;
-        };
-        do {
-            index++;
-            const long A = current + index;
-            auto result = run(A, &program);
-            output = result;
-        } while (!equals(&output, i));
+    const long A = 4;
+    auto result = run(A, &program);
 
-        current += index;
-        index = -1;
+    vector<int> possibles{};
+
+    for (int i = programLength - 1; i >= 0; i--) {
+        int top = ((current + 1) * 8) - 1;
+        int bottom = current * 8;
+
+        for (int j = bottom; j <= top; j++) {
+            if (j == 0) continue;
+            int A = j;
+            int result = ((((A % 8) ^ 4) ^ 4) ^ (int) (A / pow(2, ((A % 8) ^ 4)))) % 8;
+            // cout << result << endl;
+            if (result == program[i]) {
+                current = A;
+                break;
+            }
+        }
     }
 
 
