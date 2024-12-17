@@ -62,5 +62,8 @@ add_executable(2024 main.cpp
         Day16/Part1.cpp
         Day16/Part2.cpp
         Day16/PointScore.h
-        ####
+        Day17/Day17.h
+        Day17/Part1.cpp
+        Day17/Part2.cpp
+####
 )
