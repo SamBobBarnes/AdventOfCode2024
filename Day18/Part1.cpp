@@ -5,7 +5,7 @@
 #include "PointNode.h"
 
 int Day18::Part1() {
-    bool example = true;
+    bool example = false;
     const auto lines = Helpers::readFile(18, example);
 
     const int width = example ? 6 : 70;
