@@ -1,4 +1,18 @@
+#include <queue>
+
 #include "Day17.h"
+
+struct programValue {
+    programValue(const long cur, const int pc): currentValue(cur), pc(pc) {
+    }
+
+    long currentValue;
+    int pc;
+
+    bool operator<(const programValue &other) const {
+        return pc < other.pc;
+    }
+};
 
 int Day17::Part2() {
     auto combo = [](const int operand, const vector<long> *registers) -> long {
@@ -122,7 +136,7 @@ int Day17::Part2() {
         return program;
     };
 
-    auto run = [execute](const int A, vector<int> *program)-> vector<int> {
+    auto run = [execute](const long A, vector<int> *program)-> vector<int> {
         vector<long> Registers{A, 0, 0};
         int PC = 0;
         vector<int> out{};
@@ -144,31 +158,36 @@ int Day17::Part2() {
     int programLength = program.size();
     int index = -1;
 
-
-    int current = 0;
-
     const long A = 1526138149;
     auto result = run(A, &program);
 
-    // int A = 5;
-
-    long B = BST(A);
-    long B2 = BXL(B, 1);
-    long C = DV(A, B2);
-    long A1 = DV(A, 3);
-    long B3 = BXL(B2, 4);
-    long B4 = BXC(B3, C);
-    long O = OUT(B4);
-
     vector<int> possibles{};
 
-    for (int i = programLength - 1; i >= 0; i--) {
-        int top = ((current + 1) * 8) - 1;
-        int bottom = current * 8;
+    auto equals = [program](vector<int> *output, const int from)-> bool {
+        for (int j = 0; j < (*output).size(); j++) {
+            if ((*output)[j] != program[j + from]) return false;
+        }
+        return true;
+    };
 
-        for (int j = bottom; j <= top; j++) {
+    priority_queue<programValue> q{};
+    q.emplace(0, 15);
+
+    while (!q.empty()) {
+        auto u = q.top();
+        if (u.pc == -1) break;
+        q.pop();
+
+        int pc = u.pc;
+        long current = u.currentValue;
+        long top = (current + 1) * 8 - 1;
+        long bottom = current * 8;
+        int expected = program[pc];
+
+
+        for (long j = bottom; j <= top; j++) {
             if (j == 0) continue;
-            int A = j;
+            long A = j;
 
             long B = BST(A);
             long B2 = BXL(B, 1);
@@ -178,14 +197,24 @@ int Day17::Part2() {
             long B4 = BXC(B3, C);
             long O = OUT(B4);
             int result = O;
-            cout << result << endl;
-            if (result == program[i]) {
-                current = A;
-                break;
+            // cout << result << endl;
+            if (result == expected) {
+                auto fullResult = run(A, &program);
+                if (equals(&fullResult, pc)) {
+                    q.emplace(A, pc - 1);
+                }
             }
         }
     }
 
+    // auto fullResult = run(A, &program);
+    // cout << endl;
+    // for (int i = 0; i < fullResult.size(); i++) {
+    //     if (i == 0)cout << fullResult[i];
+    //     else cout << "," << fullResult[i];
+    // }
 
-    return current;
+    cout << endl << programString.substr(1) << endl;
+
+    return q.top().currentValue;
 }
