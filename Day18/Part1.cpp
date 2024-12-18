@@ -2,8 +2,7 @@
 #include <queue>
 
 #include "Day18.h"
-#include "../Point.h"
-#include "PointScore.h"
+#include "PointNode.h"
 
 int Day18::Part1() {
     bool example = true;
@@ -14,7 +13,7 @@ int Day18::Part1() {
     const int fallenBytes = example ? 12 : 1024;
 
 
-    auto Print = [width,height](map<Point, bool> *bytes) {
+    auto Print = [width,height](const map<Point, bool> *bytes) {
         cout << endl;
         for (int y = 0; y <= height; ++y) {
             for (int x = 0; x <= width; ++x) {
@@ -33,13 +32,13 @@ int Day18::Part1() {
         bytes[p] = true;
     }
 
-    Print(&bytes);
+    // Print(&bytes);
 
     map<Point, Point> prev{};
     map<Point, int> dist{};
 
     Point start{0, 0};
-    Point end{width, height};
+    const Point end{width, height};
 
     for (int y = 0; y <= height; ++y) {
         for (int x = 0; x <= width; ++x) {
@@ -50,7 +49,7 @@ int Day18::Part1() {
 
     dist[{0, 0}] = 0;
 
-    priority_queue<PointScore> q{};
+    priority_queue<PointNode> q{};
     q.emplace(start, 0);
 
     while (!q.empty()) {
@@ -60,23 +59,22 @@ int Day18::Part1() {
         }
         q.pop();
 
-        Point dirPoints[4]{
+        Point neighbors[4]{
             {u.x, u.y - 1},
             {u.x + 1, u.y},
             {u.x, u.y + 1},
             {u.x - 1, u.y}
         };
 
-        for (auto dirPoint: dirPoints) {
-            if (dirPoint.x < 0 || dirPoint.y < 0 || dirPoint.x > width || dirPoint.y > height || bytes[dirPoint])
+        for (auto v: neighbors) {
+            if (v.x < 0 || v.y < 0 || v.x > width || v.y > height || bytes[v])
                 continue;
-            auto v = dirPoint;
 
             auto alt = dist[u] + 1;
             if (alt < dist[v]) {
-                prev[v] = static_cast<Point>(u);
+                prev[v] = u;
                 dist[v] = alt;
-                q.emplace(v, alt);
+                q.emplace(v.x, v.y, alt);
             }
         }
     }
