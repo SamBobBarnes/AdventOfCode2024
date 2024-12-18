@@ -1,3 +1,4 @@
+#include <math.h>
 #include <queue>
 
 #include "Day17.h"

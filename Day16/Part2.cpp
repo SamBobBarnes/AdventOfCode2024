@@ -142,7 +142,9 @@ int Day16::Part2() {
         auto p = q2.front();
         q2.pop();
         seats.insert(p);
-        q2.push_range(pred[p]);
+        for (auto i: pred[p]) {
+            q2.push(i);
+        }
     }
 
     return seats.size();

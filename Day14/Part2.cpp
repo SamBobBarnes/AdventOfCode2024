@@ -1,6 +1,6 @@
 #include <map>
 #include <set>
-#include <__algorithm/ranges_sort.h>
+#include <algorithm>
 
 #include "Day14.h"
 #include "Robot.h"

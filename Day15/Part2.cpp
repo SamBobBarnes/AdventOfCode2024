@@ -1,4 +1,4 @@
-#include <_xlocale.h>
+
 
 #include "Day15.h"
 #include "../Point.h"

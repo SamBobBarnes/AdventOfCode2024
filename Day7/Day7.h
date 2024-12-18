@@ -1,6 +1,7 @@
 #ifndef DAY7_H
 #define DAY7_H
 
+#include <math.h>
 #include <utility>
 
 #include "../Helpers.h"

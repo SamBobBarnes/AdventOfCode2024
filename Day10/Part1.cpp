@@ -23,7 +23,10 @@ set<Point> Day10::FindTrails(const vector<vector<int> > *topoMap, const Point cu
                 emplace_back(current.x, current.y + 1);
 
     for (const auto &step: nextSteps) {
-        total.insert_range(FindTrails(topoMap, step));
+        auto trails = FindTrails(topoMap, step);
+        for (auto trail: trails) {
+            total.insert(trail);
+        }
     }
     return total;
 }

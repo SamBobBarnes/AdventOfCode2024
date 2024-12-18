@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "Day17.h"
 
 string Day17::Part1() {

@@ -11,7 +11,7 @@
 
 class Timer {
 private:
-    std::map<std::string, std::vector<std::chrono::time_point<std::chrono::steady_clock> > > timers{};
+    std::map<std::string, std::vector<std::chrono::time_point<std::chrono::system_clock> > > timers{};
 
 public:
     void Start(const std::string &label) {
