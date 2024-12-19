@@ -44,7 +44,7 @@ int Day19::Part2() {
 
     auto pattern = possiblePatterns[0];
 
-    map<int, tuple<int,string>> tMap{}; //index, length, towel
+    map<int, tuple<int, string> > tMap{}; //index, length, towel
     for (auto towel: towels) {
         //find all instances and write to map
     }
