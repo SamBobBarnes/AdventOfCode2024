@@ -11,7 +11,11 @@
 
 class Timer {
 private:
+#ifdef _WIN32
     std::map<std::string, std::vector<std::chrono::time_point<std::chrono::system_clock> > > timers{};
+#else
+    std::map<std::string, std::vector<std::chrono::time_point<std::chrono::steady_clock> > > timers{};
+#endif
 
 public:
     void Start(const std::string &label) {
