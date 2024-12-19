@@ -26,6 +26,33 @@ public:
     void push(const T &value) { impl.insert(value); }
 };
 
+vector<int> findNext(const vector<string> *towels, const string &pattern, const int start) {
+    vector<int> endPoints{};
+    for (const auto &towel: (*towels)) {
+        int i = pattern.find(towel, start);
+        if (i != start) continue;
+        endPoints.push_back(i + towel.length());
+    }
+    return endPoints;
+};
+
+uint64_t Day19::countOptions(map<int, int> *tMap, const vector<string> *towels, const string &pattern, const int i) {
+    if (i == pattern.length())
+        return 1;
+
+    if (tMap->contains(i)) {
+        return (*tMap)[i];
+    }
+
+    uint64_t sum = 0;
+    for (auto j: findNext(towels, pattern, i)) {
+        sum += countOptions(tMap, towels, pattern, j);
+    }
+
+    (*tMap)[i] = sum;
+    return sum;
+}
+
 
 uint64_t Day19::Part2() {
     const auto lines = Helpers::readFile(19, false);
@@ -41,47 +68,11 @@ uint64_t Day19::Part2() {
     uint64_t total{0};
 
     for (const auto &pattern: patterns) {
-        uint64_t subTotal{0};
         if (!isPossible(&towels, pattern)) continue;
-        // auto pattern = possiblePatterns[0];
-        auto findAll = [](const string &pattern, const string &t)-> vector<int> {
-            vector<int> indices{};
-            int i = -1;
-            int location = 0;
-            do {
-                i = pattern.find(t, location);
-                if (i >= 0)indices.push_back(i);
-                location = i + 1;
-            } while (i >= 0);
-            return indices;
-        };
-
-        map<int, vector<int> > tMap{}; //index, length, towel
-        for (const auto &towel: towels) {
-            auto length = towel.length();
-            auto is = findAll(pattern, towel);
-            for (auto &i: is) {
-                tMap[i].push_back(i + length);
-            }
-        }
-
-        auto compRev = [](int first, int second) { return first < second; };
-        Queue<int, decltype(compRev)> q(compRev);
-
-        q.push(0);
-
-        while (!q.empty()) {
-            auto x = q.pop();
-            // cout << x << endl;
-            auto options = &tMap[x];
-            int size = options->size();
-            if (size > 1) subTotal += size;
-            for (auto o: tMap[x]) {
-                q.push(o);
-            }
-        }
+        map<int, int> tMap{};
+        uint64_t subTotal = countOptions(&tMap, &towels, pattern, 0);
         total += subTotal;
     }
 
-    return total;
+    return total; // > 29335
 }
