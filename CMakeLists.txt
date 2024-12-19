@@ -69,5 +69,8 @@ add_executable(2024 main.cpp
         Day18/Part1.cpp
         Day18/Part2.cpp
         Day18/PointNode.h
-        ####
+        Day19/Day19.h
+        Day19/Part1.cpp
+        Day19/Part2.cpp
+####
 )
