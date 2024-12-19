@@ -44,9 +44,26 @@ int Day19::Part2() {
 
     auto pattern = possiblePatterns[0];
 
-    map<int, tuple<int, string> > tMap{}; //index, length, towel
-    for (auto towel: towels) {
+    auto findAll = [](const string &pattern, const string &t)-> vector<int> {
+        vector<int> indices{};
+        int i = -1;
+        int location = 0;
+        do {
+            i = pattern.find(t, location);
+            if (i >= 0)indices.push_back(i);
+            location = i + 1;
+        } while (i >= 0);
+        return indices;
+    };
+
+    map<int, map<size_t, string> > tMap{}; //index, length, towel
+    for (const auto &towel: towels) {
         //find all instances and write to map
+        auto length = towel.length();
+        auto is = findAll(pattern, towel);
+        for (auto &i: is) {
+            tMap[i][length] = towel;
+        }
     }
 
     //go find all possible permutations within map
