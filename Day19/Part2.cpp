@@ -1,25 +1,33 @@
 #include <map>
+#include <queue>
+#include <set>
 
 #include "Day19.h"
 #include "../Point.h"
 
-int Day19::countOptions(map<int, map<size_t, string> > *tMap, const string &pattern, const int i) {
-    if (i == pattern.length()) return 1;
-    int permutations = 0;
-    auto current = (*tMap)[i];
-    for (auto [size,_]: current) {
-        permutations += countOptions(tMap, pattern, i + size);
-    }
-    return permutations;
-}
+template<typename T, typename C>
+class Queue {
+    std::set<T, C> impl;
 
-struct memo {
-    int index;
-    vector<memo> options;
+public:
+    Queue(C compare) : impl(compare) {
+    }
+
+    const T pop() {
+        auto x = *impl.begin();
+        impl.erase(impl.begin());
+        return x;
+    }
+
+    bool empty() const { return impl.empty(); }
+
+    std::size_t size() const { return impl.size(); }
+
+    void push(const T &value) { impl.insert(value); }
 };
 
 
-long long Day19::Part2() {
+uint64_t Day19::Part2() {
     const auto lines = Helpers::readFile(19, false);
 
     const auto towels = Helpers::split(lines[0], ", ");
@@ -30,45 +38,50 @@ long long Day19::Part2() {
         patterns.push_back(lines[i]);
     }
 
-    long long total{0};
-    vector<string> possiblePatterns{};
+    uint64_t total{0};
 
-    for (auto pattern: patterns) {
-        if (isPossible(&towels, pattern)) possiblePatterns.push_back(pattern);
-    }
+    for (const auto &pattern: patterns) {
+        uint64_t subTotal{0};
+        if (!isPossible(&towels, pattern)) continue;
+        // auto pattern = possiblePatterns[0];
+        auto findAll = [](const string &pattern, const string &t)-> vector<int> {
+            vector<int> indices{};
+            int i = -1;
+            int location = 0;
+            do {
+                i = pattern.find(t, location);
+                if (i >= 0)indices.push_back(i);
+                location = i + 1;
+            } while (i >= 0);
+            return indices;
+        };
 
-    // for (auto pattern: possiblePatterns) {
-    auto pattern = possiblePatterns[0];
-    auto findAll = [](const string &pattern, const string &t)-> vector<int> {
-        vector<int> indices{};
-        int i = -1;
-        int location = 0;
-        do {
-            i = pattern.find(t, location);
-            if (i >= 0)indices.push_back(i);
-            location = i + 1;
-        } while (i >= 0);
-        return indices;
-    };
-
-    map<int, map<size_t, string> > tMap{}; //index, length, towel
-    for (const auto &towel: towels) {
-        auto length = towel.length();
-        auto is = findAll(pattern, towel);
-        for (auto &i: is) {
-            tMap[i][length] = towel;
+        map<int, vector<int> > tMap{}; //index, length, towel
+        for (const auto &towel: towels) {
+            auto length = towel.length();
+            auto is = findAll(pattern, towel);
+            for (auto &i: is) {
+                tMap[i].push_back(i + length);
+            }
         }
-    }
-    // int i = pattern.length() - 1;
 
-    // map<int, int> memo{};
-    //
-    // do {
-    //     auto options = tMap[i];
-    //     if (options.empty())
-    //         memo[i] = 0;
-    //     i--;
-    // } while (i > 0);
-    // }
+        auto compRev = [](int first, int second) { return first < second; };
+        Queue<int, decltype(compRev)> q(compRev);
+
+        q.push(0);
+
+        while (!q.empty()) {
+            auto x = q.pop();
+            // cout << x << endl;
+            auto options = &tMap[x];
+            int size = options->size();
+            if (size > 1) subTotal += size;
+            for (auto o: tMap[x]) {
+                q.push(o);
+            }
+        }
+        total += subTotal;
+    }
+
     return total;
 }

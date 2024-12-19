@@ -110,7 +110,7 @@ int main() {
             std::cout << "Day 18 - Part 2: " << Day18::Part2() << std::endl;
             break;
         case 19:
-            std::cout << "Day 19 - Part 1: " << Day19::Part1() << std::endl;
+            // std::cout << "Day 19 - Part 1: " << Day19::Part1() << std::endl;
             std::cout << "Day 19 - Part 2: " << Day19::Part2() << std::endl;
             break;
         //####case
