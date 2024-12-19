@@ -3,25 +3,24 @@
 #include "Day19.h"
 #include "../Point.h"
 
-int Day19::countOptions(const vector<string> *towels, const string &pattern) {
-    int permutations{0};
-    for (auto towel: *towels) {
-        int i = pattern.find(towel);
-        if (i != 0) continue;
-        string next = pattern.substr(towel.length());
-        if (next.length() == 0) {
-            permutations++;
-            continue;
-        }
-        permutations += countOptions(towels, next);
-    };
-
+int Day19::countOptions(map<int, map<size_t, string> > *tMap, const string &pattern, const int i) {
+    if (i == pattern.length()) return 1;
+    int permutations = 0;
+    auto current = (*tMap)[i];
+    for (auto [size,_]: current) {
+        permutations += countOptions(tMap, pattern, i + size);
+    }
     return permutations;
 }
 
+struct memo {
+    int index;
+    vector<memo> options;
+};
 
-int Day19::Part2() {
-    const auto lines = Helpers::readFile(19, true);
+
+long long Day19::Part2() {
+    const auto lines = Helpers::readFile(19, false);
 
     const auto towels = Helpers::split(lines[0], ", ");
 
@@ -31,7 +30,7 @@ int Day19::Part2() {
         patterns.push_back(lines[i]);
     }
 
-    int total{0};
+    long long total{0};
     vector<string> possiblePatterns{};
 
     for (auto pattern: patterns) {
@@ -39,11 +38,7 @@ int Day19::Part2() {
     }
 
     // for (auto pattern: possiblePatterns) {
-    //     total += countOptions(&towels, pattern);
-    // }
-
     auto pattern = possiblePatterns[0];
-
     auto findAll = [](const string &pattern, const string &t)-> vector<int> {
         vector<int> indices{};
         int i = -1;
@@ -58,15 +53,22 @@ int Day19::Part2() {
 
     map<int, map<size_t, string> > tMap{}; //index, length, towel
     for (const auto &towel: towels) {
-        //find all instances and write to map
         auto length = towel.length();
         auto is = findAll(pattern, towel);
         for (auto &i: is) {
             tMap[i][length] = towel;
         }
     }
+    // int i = pattern.length() - 1;
 
-    //go find all possible permutations within map
-
+    // map<int, int> memo{};
+    //
+    // do {
+    //     auto options = tMap[i];
+    //     if (options.empty())
+    //         memo[i] = 0;
+    //     i--;
+    // } while (i > 0);
+    // }
     return total;
 }
