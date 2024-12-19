@@ -10,6 +10,8 @@ public:
     static int Part1();
 
     static int Part2();
+
+    static bool isPossible(const vector<string> *towels, const string pattern);
 };
 
 #endif //DAY19_H

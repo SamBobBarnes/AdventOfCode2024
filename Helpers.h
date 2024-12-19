@@ -98,6 +98,23 @@ public:
         return result;
     }
 
+    static std::vector<std::string> split(std::string input, std::string on) {
+        std::string temp = std::move(input);
+        std::vector<std::string> result{};
+        bool finished{false};
+
+        while (!finished) {
+            int spaceIndex = temp.find(on);
+            if (spaceIndex == -1) finished = true;
+            std::string token = temp.substr(0, spaceIndex);
+            if (!token.empty()) result.push_back(token);
+            temp = temp.substr(spaceIndex + on.length());
+        }
+
+        return result;
+    }
+
+
     static std::vector<char> splitIntoChars(const std::string &input) {
         std::vector<char> result{};
 
