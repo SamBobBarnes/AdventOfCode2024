@@ -14,7 +14,8 @@ public:
 
     static bool isPossible(const vector<string> *towels, const string &pattern);
 
-    static uint64_t countOptions(map<int, int> *tMap, const vector<string> *towels, const string &pattern, const int i);
+    static uint64_t countOptions(map<int, uint64_t> *tMap, const vector<string> *towels, const string &pattern,
+                                 const int i);
 };
 
 #endif //DAY19_H

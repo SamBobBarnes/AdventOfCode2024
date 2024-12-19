@@ -36,7 +36,8 @@ vector<int> findNext(const vector<string> *towels, const string &pattern, const 
     return endPoints;
 };
 
-uint64_t Day19::countOptions(map<int, int> *tMap, const vector<string> *towels, const string &pattern, const int i) {
+uint64_t Day19::countOptions(map<int, uint64_t> *tMap, const vector<string> *towels, const string &pattern,
+                             const int i) {
     if (i == pattern.length())
         return 1;
 
@@ -69,10 +70,10 @@ uint64_t Day19::Part2() {
 
     for (const auto &pattern: patterns) {
         if (!isPossible(&towels, pattern)) continue;
-        map<int, int> tMap{};
+        map<int, uint64_t> tMap{};
         uint64_t subTotal = countOptions(&tMap, &towels, pattern, 0);
         total += subTotal;
     }
 
-    return total; // > 29335
+    return total;
 }
