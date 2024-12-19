@@ -2,7 +2,7 @@
 
 #include "Day19.h"
 
-bool Day19::isPossible(const vector<string> *towels, const string pattern) {
+bool Day19::isPossible(const vector<string> *towels, const string &pattern) {
     bool possible = false;
     queue<string> q{};
     for (auto towel: *towels) q.push(towel);

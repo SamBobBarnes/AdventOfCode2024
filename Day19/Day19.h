@@ -11,7 +11,9 @@ public:
 
     static int Part2();
 
-    static bool isPossible(const vector<string> *towels, const string pattern);
+    static bool isPossible(const vector<string> *towels, const string &pattern);
+
+    static int countOptions(const vector<string> *towels, const string &pattern);
 };
 
 #endif //DAY19_H
