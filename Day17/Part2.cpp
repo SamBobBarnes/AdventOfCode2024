@@ -1,13 +1,14 @@
+#include <complex.h>
 #include <math.h>
 #include <queue>
 
 #include "Day17.h"
 
 struct programValue {
-    programValue(const long cur, const int pc): currentValue(cur), pc(pc) {
+    programValue(const uint64_t cur, const int pc): currentValue(cur), pc(pc) {
     }
 
-    long currentValue;
+    uint64_t currentValue;
     int pc;
 
     bool operator<(const programValue &other) const {
@@ -15,8 +16,23 @@ struct programValue {
     }
 };
 
+bool checkLast(vector<int> *program, vector<int> *against, const int startAt) {
+    for (int i = startAt; i < program->size(); i++) {
+        if ((*against)[i] != (*program)[i]) return false;
+    }
+    return true;
+}
+
+string program2String(vector<int> *program) {
+    string programString = "";
+    for (auto i: *program) {
+        programString += "," + to_string(i);
+    }
+    return programString;
+}
+
 int Day17::Part2() {
-    auto combo = [](const int operand, const vector<long> *registers) -> long {
+    auto combo = [](const int operand, const vector<uint64_t> *registers) -> uint64_t {
         switch (operand) {
             case 0:
             case 1:
@@ -47,32 +63,12 @@ int Day17::Part2() {
         cdv = 7 // C = A / (pow(2,cx))
     };
 
-    auto DV = [](long A, long cx)-> long {
-        return A / powl(2, cx);
-    };
-
-    auto BXL = [](long B, int x)-> long {
-        return B ^ x;
-    };
-
-    auto BST = [](long cx)-> long {
-        return cx % 8;
-    };
-
-    auto BXC = [](long B, long C)-> long {
-        return B ^ C;
-    };
-
-    auto OUT = [](long cx)-> int {
-        return cx % 8;
-    };
-
-    auto execute = [combo](const Op op, const int operand, vector<long> *registers, int &pc,
+    auto execute = [combo](const Op op, const int operand, vector<uint64_t> *registers, int &pc,
                            vector<int> *output,
                            bool debug = false) {
-        long *A = &(*registers)[0];
-        long *B = &(*registers)[1];
-        long *C = &(*registers)[2];
+        uint64_t *A = &(*registers)[0];
+        uint64_t *B = &(*registers)[1];
+        uint64_t *C = &(*registers)[2];
         int cx = combo(operand, registers);
         int x = operand;
         switch (op) {
@@ -137,8 +133,8 @@ int Day17::Part2() {
         return program;
     };
 
-    auto run = [execute](const long A, vector<int> *program)-> vector<int> {
-        vector<long> Registers{A, 0, 0};
+    auto run = [execute](const uint64_t A, vector<int> *program)-> vector<int> {
+        vector<uint64_t> Registers{A, 0, 0};
         int PC = 0;
         vector<int> out{};
         while (PC < program->size()) {
@@ -149,73 +145,28 @@ int Day17::Part2() {
         return out;
     };
     auto program = loadProgram();
-    string programString = "";
-    for (auto i: program) {
-        programString += "," + to_string(i);
-    }
+    string programString = program2String(&program);
 
     vector<int> output{};
 
-    int programLength = program.size();
-    int index = -1;
+    uint64_t A = powl(8, 15);
 
-    const long A = 1526138149;
-    auto result = run(A, &program);
-
-    vector<int> possibles{};
-
-    auto equals = [program](vector<int> *output, const int from)-> bool {
-        for (int j = 0; j < (*output).size(); j++) {
-            if ((*output)[j] != program[j + from]) return false;
-        }
-        return true;
-    };
-
-    priority_queue<programValue> q{};
-    q.emplace(0, 15);
-
-    while (!q.empty()) {
-        auto u = q.top();
-        if (u.pc == -1) break;
-        q.pop();
-
-        int pc = u.pc;
-        long current = u.currentValue;
-        long top = (current + 1) * 8 - 1;
-        long bottom = current * 8;
-        int expected = program[pc];
-
-
-        for (long j = bottom; j <= top; j++) {
-            if (j == 0) continue;
-            long A = j;
-
-            long B = BST(A);
-            long B2 = BXL(B, 1);
-            long C = DV(A, B2);
-            long A1 = DV(A, 3);
-            long B3 = BXL(B2, 4);
-            long B4 = BXC(B3, C);
-            long O = OUT(B4);
-            int result = O;
-            // cout << result << endl;
-            if (result == expected) {
-                auto fullResult = run(A, &program);
-                if (equals(&fullResult, pc)) {
-                    q.emplace(A, pc - 1);
-                }
-            }
-        }
+    for (int i = 14; i >= 0; i--) {
+        vector<int> result;
+        do {
+            A += powl(8, i);
+            result = run(A, &program);
+        } while (!checkLast(&program, &result, i + 1));
     }
 
-    // auto fullResult = run(A, &program);
-    // cout << endl;
-    // for (int i = 0; i < fullResult.size(); i++) {
-    //     if (i == 0)cout << fullResult[i];
-    //     else cout << "," << fullResult[i];
-    // }
+    auto result = run(A, &program);
 
-    cout << endl << programString.substr(1) << endl;
+    cout << endl;
+    for (auto i: result) {
+        cout << "," << i;
+    }
 
-    return q.top().currentValue;
+    cout << endl << programString << endl;
+
+    return A;
 }
