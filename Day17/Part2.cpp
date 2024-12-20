@@ -16,21 +16,6 @@ struct programValue {
     }
 };
 
-bool checkLast(vector<int> *program, vector<int> *against, const int startAt) {
-    for (int i = startAt; i < program->size(); i++) {
-        if ((*against)[i] != (*program)[i]) return false;
-    }
-    return true;
-}
-
-string program2String(vector<int> *program) {
-    string programString = "";
-    for (auto i: *program) {
-        programString += "," + to_string(i);
-    }
-    return programString;
-}
-
 int Day17::Part2() {
     auto combo = [](const int operand, const vector<uint64_t> *registers) -> uint64_t {
         switch (operand) {
@@ -149,15 +134,8 @@ int Day17::Part2() {
 
     vector<int> output{};
 
-    uint64_t A = powl(8, 15);
+    uint64_t A = findA(0, &program, 15, run);
 
-    for (int i = 14; i >= 0; i--) {
-        vector<int> result;
-        do {
-            A += powl(8, i);
-            result = run(A, &program);
-        } while (!checkLast(&program, &result, i + 1));
-    }
 
     auto result = run(A, &program);
 
