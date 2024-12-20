@@ -47,36 +47,8 @@ uint64_t Day20::Part2() {
         return neighbors;
     };
 
-    auto dijkstra = [getShortcutSet
-            ](const Point &start, const Point &end, map<Point, Point> prev, map<Point, int> dist)-> int {
-        dist[start] = 0;
-
-        priority_queue<PointScore> q{};
-        q.emplace(start, 1);
-
-        while (!q.empty()) {
-            auto u = q.top();
-            if (u.Score > 20) {
-                return -1;
-            }
-            if (u == end) {
-                break;
-            }
-            q.pop();
-
-            auto neighbors = getShortcutSet(u);
-
-            for (auto v: neighbors) {
-                auto alt = dist[u] + 1;
-                if (alt < dist[v]) {
-                    prev[v] = static_cast<Point>(u);
-                    dist[v] = alt;
-                    q.emplace(v, alt);
-                }
-            }
-        }
-
-        return q.top().Score;
+    auto manhattan = [](const Point &start, const Point &end)-> int {
+        return abs(start.x - end.x) + abs(start.y - end.y);
     };
 
     for (int y = 0; y < lines.size(); ++y) {
@@ -107,12 +79,11 @@ uint64_t Day20::Part2() {
         for (int j = i + 1; j < racetrack.size(); ++j) {
             const Point &current = racetrack[i];
             const Point &next = racetrack[j];
-            auto length = dijkstra(current, next, prevI, distI);
-            if (length > 0) {
-                // cout << current.x << "," << current.y << endl;
+            auto length = manhattan(current, next);
+            if (length <= 20) {
                 int cheatSaves = j - i - length;
                 shortcuts[cheatSaves]++;
-                if (cheatSaves >= 50)
+                if (cheatSaves >= 100)
                     total++;
             }
         }
@@ -126,5 +97,5 @@ uint64_t Day20::Part2() {
     //         cout << "There is one cheat that saves " << size << " picoseconds." << endl;
     // }
 
-    return total;
+    return total; //< 42575099
 }
