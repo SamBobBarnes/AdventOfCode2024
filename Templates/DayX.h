@@ -2,6 +2,7 @@
 #define DAYX_H
 
 #include "../Helpers.h"
+#include "../Point.h"
 
 using namespace std;
 
