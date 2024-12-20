@@ -4,7 +4,7 @@
 #include "Day20.h"
 
 uint64_t Day20::Part2() {
-    const auto lines = Helpers::readFile(20, true);
+    const auto lines = Helpers::readFile(20, false);
 
     Point start;
     Point end;
@@ -35,14 +35,14 @@ uint64_t Day20::Part2() {
     auto getShortcutSet = [lines,height,width](const Point &current) -> vector<Point> {
         vector<Point> neighbors{};
 
-        if (current.y != 0 && lines[current.y - 1][current.x] == '#') neighbors.emplace_back(current.x, current.y - 1);
-        if (current.x < width - 1 && lines[current.y][current.x + 1] == '#')
+        if (current.y != 0) neighbors.emplace_back(current.x, current.y - 1);
+        if (current.x < width - 1)
             neighbors.emplace_back(
                 current.x + 1, current.y);
-        if (current.y < height - 1 && lines[current.y + 1][current.x] == '#')
+        if (current.y < height - 1)
             neighbors.emplace_back(
                 current.x, current.y + 1);
-        if (current.x != 0 && lines[current.y][current.x - 1] == '#') neighbors.emplace_back(current.x - 1, current.y);
+        if (current.x != 0) neighbors.emplace_back(current.x - 1, current.y);
 
         return neighbors;
     };
@@ -109,12 +109,22 @@ uint64_t Day20::Part2() {
             const Point &next = racetrack[j];
             auto length = dijkstra(current, next, prevI, distI);
             if (length > 0) {
-                cout << current.x << "," << current.y << endl;
-                shortcuts[i - j - length]++;
-                if (i - j - length >= 100) total++;
+                // cout << current.x << "," << current.y << endl;
+                int cheatSaves = j - i - length;
+                shortcuts[cheatSaves]++;
+                if (cheatSaves >= 50)
+                    total++;
             }
         }
     }
+
+    // cout << endl;
+    // for (auto [size,count]: shortcuts) {
+    //     if (count > 1)
+    //         cout << "There are " << count << " cheats that save " << size << " picoseconds." << endl;
+    //     else
+    //         cout << "There is one cheat that saves " << size << " picoseconds." << endl;
+    // }
 
     return total;
 }
