@@ -17,134 +17,69 @@ struct programValue {
 };
 
 int Day17::Part2() {
-    auto combo = [](const int operand, const vector<uint64_t> *registers) -> uint64_t {
-        switch (operand) {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-                return operand;
-            case 4:
-                return (*registers)[0];
-            case 5:
-                return (*registers)[1];
-            case 6:
-                return (*registers)[2];
-            default:
-                cerr << "TILT! " << operand << " is not a valid operand!";
-                return -1;
-        }
+    // case 0:
+    // case 1:
+    // case 2:
+    // case 3:
+    //     return operand;
+    // case 4:
+    //     return (*registers)[0];
+    // case 5:
+    //     return (*registers)[1];
+    // case 6:
+    //     return (*registers)[2];
+
+
+    // x = literal, cx = combo
+    // adv = 0, // A = A / (pow(2,cx))
+    // bxl = 1, // B = B ^ x
+    // bst = 2, // B = cx % 8
+    // jnz = 3, // if A > 0 then jmp to x
+    // bxc = 4, // B = B ^ C
+    // out = 5, // OUT = cx % 8
+    // bdv = 6, // B = A / (pow(2,cx))
+    // cdv = 7 // C = A / (pow(2,cx))
+
+
+    /// 2,4 B = A % 8
+    /// 1,1 B = B ^ 1
+    /// 7,5 C = A / pow(2,B)
+    /// 0,3 A = A / 8
+    /// 1,4 B = B ^ 4
+    /// 4,0 B = B ^ C
+    /// 5,5 OUT B % 8
+    /// 3,0 JMP 0
+
+    auto execute = [](uint64_t input) {
+        uint64_t A = input;
+        uint64_t B = 0;
+        uint64_t C = 0;
+        vector<int> output{};
+        do {
+            B = A % 8;
+            B = B ^ 1;
+            C = A / static_cast<uint64_t>(pow(2, B));
+            A = A / 8;
+            B = B ^ 4;
+            B = B ^ C;
+            output.push_back(B % 8);
+        } while (A != 0);
+
+        // reverse(output.begin(), output.end());
+        return output;
     };
 
-    enum Op {
-        // x = literal, cx = combo
-        adv = 0, // A = A / (pow(2,cx))
-        bxl = 1, // B = B ^ x
-        bst = 2, // B = cx % 8
-        jnz = 3, // if A > 0 then jmp to x
-        bxc = 4, // B = B ^ C
-        out = 5, // OUT = cx % 8
-        bdv = 6, // B = A / (pow(2,cx))
-        cdv = 7 // C = A / (pow(2,cx))
-    };
+    const auto lines = Helpers::readFile(17, true);
 
-    auto execute = [combo](const Op op, const int operand, vector<uint64_t> *registers, int &pc,
-                           vector<int> *output,
-                           bool debug = false) {
-        uint64_t *A = &(*registers)[0];
-        uint64_t *B = &(*registers)[1];
-        uint64_t *C = &(*registers)[2];
-        int cx = combo(operand, registers);
-        int x = operand;
-        switch (op) {
-            case adv:
-                if (debug) cout << "A = " << *A << " / powl(2," << cx << ") = ";
-                *A = *A / powl(2, cx);
-                if (debug) cout << *A << endl;
-                pc += 2;
-                break;
-            case bxl:
-                if (debug) cout << "B = " << *B << " ^ " << x;
-                *B = *B ^ operand;
-                if (debug) cout << " = " << *B << endl;
-                pc += 2;
-                break;
-            case bst:
-                *B = cx % 8;
-                if (debug) cout << "B = " << cx << " % 8 = " << *B << endl;
-                pc += 2;
-                break;
-            case jnz:
-                if (*A > 0) {
-                    pc = operand;
-                    if (debug) cout << "Jump to = " << x << endl;
-                } else {
-                    if (debug) cout << "Dont Jump" << endl;
-                    pc += 2;
-                }
-                break;
-            case bxc:
-                if (debug) cout << "B = " << *B << " ^ " << *C;
-                *B = *B ^ *C;
-                if (debug) cout << " = " << *B << endl;
-                pc += 2;
-                break;
-            case out:
-                output->push_back(cx % 8);
-                if (debug) cout << "Output: " << cx << " % 8 = " << cx % 8 << endl;
-                pc += 2;
-                break;
-            case bdv:
-                *B = *A / powl(2, cx);
-                if (debug) cout << "B = " << *A << " / powl(2," << cx << ") = " << *B << endl;
-                pc += 2;
-                break;
-            case cdv:
-                *C = *A / powl(2, cx);
-                if (debug) cout << "C = " << *A << " / powl(2," << cx << ") = " << *C << endl;
-                pc += 2;
-                break;
-        }
-    };
-
-    const auto lines = Helpers::readFile(17, false);
-
-    auto loadProgram = [lines]() {
-        vector<string> strings = Helpers::split(lines[4].substr(9), ',');
-        vector<int> program{};
-        for (auto str: strings) {
-            program.push_back(stoi(str));
-        }
-        return program;
-    };
-
-    auto run = [execute](const uint64_t A, vector<int> *program)-> vector<int> {
-        vector<uint64_t> Registers{A, 0, 0};
-        int PC = 0;
-        vector<int> out{};
-        while (PC < program->size()) {
-            const Op op = static_cast<Op>((*program)[PC]);
-            const int operand = (*program)[PC + 1];
-            execute(op, operand, &Registers, PC, &out);
-        }
-        return out;
-    };
-    auto program = loadProgram();
-    string programString = program2String(&program);
-
-    vector<int> output{};
-
-    uint64_t A = findA(0, &program, 15, run);
-
-
-    auto result = run(A, &program);
-
-    cout << endl;
-    for (auto i: result) {
-        cout << "," << i;
+    vector<string> strings = Helpers::split(lines[4].substr(9), ',');
+    vector<int> program{};
+    for (auto str: strings) {
+        program.push_back(stoi(str));
     }
 
-    cout << endl << programString << endl;
+    string programString = program2String(&program);
 
-    return A;
+    auto output = execute(32916674);
+
+    return 0;
 }
