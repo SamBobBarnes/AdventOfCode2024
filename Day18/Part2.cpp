@@ -2,7 +2,6 @@
 #include <queue>
 
 #include "Day18.h"
-#include "PointNode.h"
 
 void Day18::resetDijkstra(const int width, const int height, map<Point, Point> *prev, map<Point, int> *dist) {
     for (int y = 0; y <= height; ++y) {
@@ -39,7 +38,7 @@ string Day18::Part2() {
     Point start{0, 0};
     const Point end{width, height};
 
-    priority_queue<PointNode> q{};
+    priority_queue<PointScore> q{};
 
     resetDijkstra(width, height, &prev, &dist);
     q.emplace(start, 0);

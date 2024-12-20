@@ -45,16 +45,29 @@ struct Point {
 };
 
 struct PointScore : Point {
-    PointScore(const int x, const int y, const int score, const int dir): Point(x, y), Score(score), Dir(dir) {
+    PointScore(const int x, const int y, const int score): Point(x, y), Score(score) {
     }
 
-    PointScore(const Point p, const int score, const int dir): Point(p.x, p.y), Score(score), Dir(dir) {
+    PointScore(const Point p, const int score): Point(p.x, p.y), Score(score) {
     }
 
     int Score;
-    int Dir;
 
     bool operator<(const PointScore &other) const {
+        return Score > other.Score;
+    }
+};
+
+struct PointScoreDir : PointScore {
+    PointScoreDir(const int x, const int y, const int score, const int dir): PointScore(x, y, score), Dir(dir) {
+    }
+
+    PointScoreDir(const Point p, const int score, const int dir): PointScore(p.x, p.y, score), Dir(dir) {
+    }
+
+    int Dir;
+
+    bool operator<(const PointScoreDir &other) const {
         return Score > other.Score;
     }
 };

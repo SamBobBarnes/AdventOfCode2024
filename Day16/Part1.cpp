@@ -32,7 +32,7 @@ int Day16::Part1() {
         }
     }
 
-    priority_queue<PointScore> q{};
+    priority_queue<PointScoreDir> q{};
     q.emplace(start, 0, 1);
 
     while (!q.empty()) {

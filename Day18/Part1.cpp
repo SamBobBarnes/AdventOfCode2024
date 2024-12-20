@@ -2,7 +2,6 @@
 #include <queue>
 
 #include "Day18.h"
-#include "PointNode.h"
 
 int Day18::Part1() {
     bool example = false;
@@ -49,7 +48,7 @@ int Day18::Part1() {
 
     dist[{0, 0}] = 0;
 
-    priority_queue<PointNode> q{};
+    priority_queue<PointScore> q{};
     q.emplace(start, 0);
 
     while (!q.empty()) {
