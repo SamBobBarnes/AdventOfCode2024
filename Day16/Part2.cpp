@@ -4,7 +4,6 @@
 
 #include "Day16.h"
 #include "../Point.h"
-#include "PointScore.h"
 
 int Day16::Part2() {
     const auto lines = Helpers::readFile(16, true);

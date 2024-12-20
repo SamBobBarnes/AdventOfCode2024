@@ -2,7 +2,6 @@
 #include <queue>
 
 #include "Day16.h"
-#include "PointScore.h"
 #include "../Point.h"
 
 int Day16::Part1() {
