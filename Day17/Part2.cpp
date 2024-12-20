@@ -47,7 +47,7 @@ int Day17::Part2() {
     /// 4,0 B = B ^ C
     /// 5,5 OUT B % 8
     /// 3,0 JMP 0
-    const auto lines = Helpers::readFile(17, true);
+    const auto lines = Helpers::readFile(17, false);
 
     vector<string> strings = Helpers::split(lines[4].substr(9), ',');
     vector<int> program{};
