@@ -1,6 +1,4 @@
-#include <complex.h>
-#include <math.h>
-#include <queue>
+#include <cmath>
 
 #include "Day17.h"
 
@@ -49,26 +47,6 @@ int Day17::Part2() {
     /// 4,0 B = B ^ C
     /// 5,5 OUT B % 8
     /// 3,0 JMP 0
-
-    auto execute = [](uint64_t input) {
-        uint64_t A = input;
-        uint64_t B = 0;
-        uint64_t C = 0;
-        vector<int> output{};
-        do {
-            B = A % 8;
-            B = B ^ 1;
-            C = A / static_cast<uint64_t>(pow(2, B));
-            A = A / 8;
-            B = B ^ 4;
-            B = B ^ C;
-            output.push_back(B % 8);
-        } while (A != 0);
-
-        // reverse(output.begin(), output.end());
-        return output;
-    };
-
     const auto lines = Helpers::readFile(17, true);
 
     vector<string> strings = Helpers::split(lines[4].substr(9), ',');
@@ -79,7 +57,8 @@ int Day17::Part2() {
 
     string programString = program2String(&program);
 
-    auto output = execute(32916674);
+    uint64_t A = 0;
+    solve(A, program);
 
     return 0;
 }
