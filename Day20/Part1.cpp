@@ -114,13 +114,13 @@ int Day20::Part1() {
         if (size >= 100) total++;
     }
 
-    cout << endl;
-    for (auto [size,count]: shortcutSizes) {
-        if (count > 1)
-            cout << "There are " << count << " cheats that save " << size << " picoseconds." << endl;
-        else
-            cout << "There is one cheat that saves " << size << " picoseconds." << endl;
-    }
+    // cout << endl;
+    // for (auto [size,count]: shortcutSizes) {
+    //     if (count > 1)
+    //         cout << "There are " << count << " cheats that save " << size << " picoseconds." << endl;
+    //     else
+    //         cout << "There is one cheat that saves " << size << " picoseconds." << endl;
+    // }
 
     // Print(lines, racingLine, shortcuts);
 
