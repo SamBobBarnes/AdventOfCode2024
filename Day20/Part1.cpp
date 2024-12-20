@@ -1,10 +1,25 @@
 #include <map>
 #include <queue>
+#include <set>
 
 #include "Day20.h"
 
+void Print(const vector<string> &lines, vector<Point> &racingLine, map<Point, int> &shortcuts) {
+    cout << endl;
+    for (int y = 0; y < lines.size(); ++y) {
+        for (int x = 0; x < lines[0].length(); ++x) {
+            Point current{x, y};
+            if (shortcuts[current]) cout << "\033[96m" << '#' << "\033[0m";
+            else if (ranges::find(racingLine, current) != racingLine.end())
+                cout << "\033[91m" << '8' << "\033[0m";
+            else cout << lines[y][x];
+        }
+        cout << endl;
+    }
+}
+
 int Day20::Part1() {
-    const auto lines = Helpers::readFile(20, true);
+    const auto lines = Helpers::readFile(20, false);
 
     Point start;
     Point end;
@@ -64,12 +79,50 @@ int Day20::Part1() {
         }
     }
 
-    Point current = q.top();
-    vector<Point> racingLine{};
-    while (current != start) {
+    vector<Point> racingLine{}; {
+        Point current = q.top();
+        while (current != start) {
+            racingLine.push_back(current);
+            current = prev[current];
+        }
         racingLine.push_back(current);
-        current = prev[current];
+    }
+    map<Point, int> shortcuts{};
+
+    for (int i = racingLine.size() - 1; i >= 0; i--) {
+        for (int j = i - 1; j >= 0; j--) {
+            const Point *current = &racingLine[i];
+            const Point *next = &racingLine[j];
+
+            if (current->x == next->x - 2 && current->y == next->y && lines[next->y][next->x - 1] == '#')
+                shortcuts[{next->x - 1, next->y}] = i - j - 2;
+            else if (current->y == next->y - 2 && current->x == next->x && lines[next->y - 1][next->x] == '#')
+                shortcuts[{next->x, next->y - 1}] = i - j - 2;
+            else if (current->x == next->x + 2 && current->y == next->y && lines[next->y][next->x + 1] == '#')
+                shortcuts[{next->x + 1, next->y}] = i - j - 2;
+            else if (current->y == next->y + 2 && current->x == next->x && lines[next->y + 1][next->x] == '#')
+                shortcuts[{next->x, next->y + 1}] = i - j - 2;
+        }
     }
 
-    return racingLine.size() - 1;
+    map<int, int> shortcutSizes{};
+
+    int total = 0;
+
+    for (auto size: shortcuts | views::values) {
+        shortcutSizes[size]++;
+        if (size >= 100) total++;
+    }
+
+    cout << endl;
+    for (auto [size,count]: shortcutSizes) {
+        if (count > 1)
+            cout << "There are " << count << " cheats that save " << size << " picoseconds." << endl;
+        else
+            cout << "There is one cheat that saves " << size << " picoseconds." << endl;
+    }
+
+    // Print(lines, racingLine, shortcuts);
+
+    return total;
 }
