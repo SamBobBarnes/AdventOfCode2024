@@ -10,7 +10,7 @@ class Day20 {
 public:
     static int Part1();
 
-    static int Part2();
+    static uint64_t Part2();
 };
 
 #endif //DAY20_H

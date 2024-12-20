@@ -3,7 +3,7 @@
 
 #include "Day20.h"
 
-int Day20::Part2() {
+uint64_t Day20::Part2() {
     const auto lines = Helpers::readFile(20, true);
 
     Point start;
@@ -32,13 +32,17 @@ int Day20::Part2() {
         return neighbors;
     };
 
-    auto getShortcutSet = [lines](const Point &current) -> vector<Point> {
+    auto getShortcutSet = [lines,height,width](const Point &current) -> vector<Point> {
         vector<Point> neighbors{};
 
-        if (lines[current.y - 1][current.x] == '#') neighbors.emplace_back(current.x, current.y - 1);
-        if (lines[current.y][current.x + 1] == '#') neighbors.emplace_back(current.x + 1, current.y);
-        if (lines[current.y + 1][current.x] == '#') neighbors.emplace_back(current.x, current.y + 1);
-        if (lines[current.y][current.x - 1] == '#') neighbors.emplace_back(current.x - 1, current.y);
+        if (current.y != 0 && lines[current.y - 1][current.x] == '#') neighbors.emplace_back(current.x, current.y - 1);
+        if (current.x < width - 1 && lines[current.y][current.x + 1] == '#')
+            neighbors.emplace_back(
+                current.x + 1, current.y);
+        if (current.y < height - 1 && lines[current.y + 1][current.x] == '#')
+            neighbors.emplace_back(
+                current.x, current.y + 1);
+        if (current.x != 0 && lines[current.y][current.x - 1] == '#') neighbors.emplace_back(current.x - 1, current.y);
 
         return neighbors;
     };
@@ -82,27 +86,35 @@ int Day20::Part2() {
         }
     }
 
-    vector<Point> racetrack{};
-
-    Point current = start;
-    while (current != end) {
-        auto neighbors = getSet(current);
-        for (auto neighbor: neighbors) {
-            if (!racetrack.empty() && neighbor == racetrack.back()) continue;
-            racetrack.push_back(current);
-            current = neighbor;
-            break;
+    vector<Point> racetrack{}; {
+        Point current = start;
+        while (current != end) {
+            auto neighbors = getSet(current);
+            for (auto neighbor: neighbors) {
+                if (!racetrack.empty() && neighbor == racetrack.back()) continue;
+                racetrack.push_back(current);
+                current = neighbor;
+                break;
+            }
         }
+        racetrack.push_back(current);
     }
-    racetrack.push_back(current);
+
+    map<int, int> shortcuts{};
+    uint64_t total{0};
 
     for (int i = 0; i < racetrack.size(); ++i) {
         for (int j = i + 1; j < racetrack.size(); ++j) {
-            const Point *current = &racetrack[i];
-            const Point *next = &racetrack[j];
+            const Point &current = racetrack[i];
+            const Point &next = racetrack[j];
+            auto length = dijkstra(current, next, prevI, distI);
+            if (length > 0) {
+                cout << current.x << "," << current.y << endl;
+                shortcuts[i - j - length]++;
+                if (i - j - length >= 100) total++;
+            }
         }
     }
 
-
-    return racetrack.size();
+    return total;
 }
