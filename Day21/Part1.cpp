@@ -31,6 +31,24 @@ int Day21::Part1() {
         }
     };
 
+    auto quickestPath = [getDirpadPos](const Point &a, const Point &b)-> int {
+        if (a == b) return 0;
+
+        return abs(a.x - b.x) + abs(a.y - b.y);
+    };
+
+    //Keypad Robot
+
+    vector<Point> buttonPresses{};
+    for (char i: lines[0]) {
+        buttonPresses.push_back(getKeypadPos(i));
+    }
+
+    //Robot 1
+    //Robot 2
+    //Me
+
+
     return 0;
 }
 
