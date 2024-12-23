@@ -76,5 +76,8 @@ add_executable(2024 main.cpp
         Day21/Day21.h
         Day21/Part1.cpp
         Day21/Part2.cpp
+Day22/Day22.h
+        Day22/Part1.cpp
+        Day22/Part2.cpp
 ####
 )

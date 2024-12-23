@@ -22,6 +22,7 @@
 #include "Day19/Day19.h"
 #include "Day20/Day20.h"
 #include "Day21/Day21.h"
+#include "Day22/Day22.h"
 //####include
 
 
@@ -37,7 +38,7 @@ int main() {
 
     // Helpers::colorReference();
 
-    switch (21) {
+    switch (22) {
         case 1:
             std::cout << "Day 1 - Part 1: " << Day1::Part1() << std::endl;
             std::cout << "Day 1 - Part 2: " << Day1::Part2() << std::endl;
@@ -121,6 +122,10 @@ int main() {
         case 21:
             std::cout << "Day 21 - Part 1: " << Day21::Part1() << std::endl;
             std::cout << "Day 21 - Part 2: " << Day21::Part2() << std::endl;
+            break;
+        case 22:
+            std::cout << "Day 22 - Part 1: " << Day22::Part1() << std::endl;
+            std::cout << "Day 22 - Part 2: " << Day22::Part2() << std::endl;
             break;
         //####case
         default:
