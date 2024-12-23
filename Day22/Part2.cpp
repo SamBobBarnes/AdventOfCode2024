@@ -4,21 +4,24 @@
 
 #include "Day22.h"
 
-size_t combineHashes(size_t hash1, size_t hash2) {
-    // A simple hash combination technique, you can use more sophisticated ones if needed
-    return hash1 ^ (hash2 + 0x9e3779b9 + (hash1 << 6) + (hash1 >> 2));
+#include <iostream>
+
+uint32_t combineIntoUint32(int8_t a, int8_t b, int8_t c, int8_t d) {
+    return (static_cast<uint32_t>(static_cast<uint8_t>(a)) << 24) |
+           (static_cast<uint32_t>(static_cast<uint8_t>(b)) << 16) |
+           (static_cast<uint32_t>(static_cast<uint8_t>(c)) << 8) |
+           static_cast<uint32_t>(static_cast<uint8_t>(d));
 }
 
-size_t hashInts(const std::array<int, 4> &ints) {
-    std::hash<int> hasher;
-    size_t combinedHash = 0;
-
-    for (int value: ints) {
-        combinedHash = combineHashes(combinedHash, hasher(value));
-    }
-
-    return combinedHash;
+vector<int> extractFromUint32(uint32_t combined) {
+    return {
+        static_cast<int8_t>((combined >> 24) & 0xFF),
+        static_cast<int8_t>((combined >> 16) & 0xFF),
+        static_cast<int8_t>((combined >> 8) & 0xFF),
+        static_cast<int8_t>(combined & 0xFF)
+    };
 }
+
 
 uint64_t Day22::Part2() {
     const auto lines = Helpers::readFile(22, true);
@@ -40,12 +43,11 @@ uint64_t Day22::Part2() {
         numbers.push_back(stoi(i));
     }
 
-    uint64_t total{0};
-    map<size_t, uint64_t> memo{};
-    set<size_t> memoIds{};
+    map<uint32_t, uint64_t> memo{};
 
     constexpr uint64_t rounds{2000};
     for (auto &number: numbers) {
+        set<uint32_t> recorded{};
         auto previous{number % 10};
         vector<int> changes{};
         for (int i = 0; i < rounds; ++i) {
@@ -53,18 +55,21 @@ uint64_t Day22::Part2() {
             auto current = digit;
             changes.push_back(current - previous);
             previous = current;
-            if (i < 4) continue;
+            if (i < 3) continue;
 
             // memoize changes
 
-            uint32_t memoId = hashInts({changes[i - 4], changes[i - 3], changes[i - 2], changes[i - 1]});
-            memoIds.insert(memoId);
-            memo[memoId] += digit;
+            const uint32_t memoId = combineIntoUint32(changes[i - 3], changes[i - 2], changes[i - 1], changes[i]);
+            int a_extracted, b_extracted, c_extracted, d_extracted;
+            auto extracted = extractFromUint32(memoId);
+            if (!recorded.contains(memoId)) {
+                recorded.insert(memoId);
+                memo[memoId] += digit;
+            }
         }
-        total += number;
     }
 
-    vector<size_t> highest;
+    vector<uint32_t> highest;
     uint64_t highestValue = 0;
     for (auto [id,number]: memo) {
         if (number == highestValue) {
@@ -76,7 +81,7 @@ uint64_t Day22::Part2() {
         }
     }
 
-    auto monkey = memo[hashInts({-2, 1, -1, 3})];
+    auto monkey = extractFromUint32(highest[0]);
 
-    return total;
+    return highestValue;
 }
