@@ -41,7 +41,7 @@ int main() {
 
     // Helpers::colorReference();
 
-    switch (22) {
+    switch (23) {
         case 1:
             std::cout << "Day 1 - Part 1: " << Day1::Part1() << std::endl;
             std::cout << "Day 1 - Part 2: " << Day1::Part2() << std::endl;
