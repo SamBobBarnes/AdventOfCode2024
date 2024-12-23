@@ -85,5 +85,8 @@ Day23/Day23.h
 Day24/Day24.h
         Day24/Part1.cpp
         Day24/Part2.cpp
+Day25/Day25.h
+        Day25/Part1.cpp
+        Day25/Part2.cpp
 ####
 )
