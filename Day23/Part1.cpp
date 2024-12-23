@@ -1,3 +1,5 @@
+#include <set>
+
 #include "Day23.h"
 
 struct Node {
@@ -42,6 +44,18 @@ int Day23::Part1() {
         if (ranges::find(B->connections, A) == B->connections.end())
             B->connections.push_back(A);
     }
+
+    auto findLoop = [
+            ](const int i, const Node *current, const Node *checkFor, const auto &findLoopRef)-> vector<Node *> {
+        for (auto v: current->connections) {
+            if (auto result = findLoopRef(i + 1, v, checkFor, findLoopRef); result.size() > 0) {
+                result.push_back(current);
+                return result;
+            }
+        }
+    };
+
+    set<string> visited{};
 
 
     int total{0};
