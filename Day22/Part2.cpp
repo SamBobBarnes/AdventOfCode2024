@@ -4,8 +4,6 @@
 
 #include "Day22.h"
 
-#include <iostream>
-
 uint32_t combineIntoUint32(int8_t a, int8_t b, int8_t c, int8_t d) {
     return (static_cast<uint32_t>(static_cast<uint8_t>(a)) << 24) |
            (static_cast<uint32_t>(static_cast<uint8_t>(b)) << 16) |
@@ -24,7 +22,7 @@ vector<int> extractFromUint32(uint32_t combined) {
 
 
 uint64_t Day22::Part2() {
-    const auto lines = Helpers::readFile(22, true);
+    const auto lines = Helpers::readFile(22, false);
 
     auto transform = [](uint64_t &number)-> int {
         constexpr uint64_t pruner = 16777216;
@@ -60,8 +58,7 @@ uint64_t Day22::Part2() {
             // memoize changes
 
             const uint32_t memoId = combineIntoUint32(changes[i - 3], changes[i - 2], changes[i - 1], changes[i]);
-            int a_extracted, b_extracted, c_extracted, d_extracted;
-            auto extracted = extractFromUint32(memoId);
+            // auto extracted = extractFromUint32(memoId);
             if (!recorded.contains(memoId)) {
                 recorded.insert(memoId);
                 memo[memoId] += digit;
@@ -81,7 +78,7 @@ uint64_t Day22::Part2() {
         }
     }
 
-    auto monkey = extractFromUint32(highest[0]);
+    // auto monkey = extractFromUint32(highest[0]);
 
     return highestValue;
 }
