@@ -8,9 +8,9 @@ using namespace std;
 
 class Day22 {
 public:
-    static int Part1();
+    static uint64_t Part1();
 
-    static int Part2();
+    static uint64_t Part2();
 };
 
 #endif //DAY22_H
