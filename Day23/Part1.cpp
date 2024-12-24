@@ -1,4 +1,6 @@
+#include <queue>
 #include <set>
+#include <__algorithm/ranges_sort.h>
 
 #include "Day23.h"
 
@@ -23,7 +25,7 @@ struct Node {
 };
 
 int Day23::Part1() {
-    const auto lines = Helpers::readFile(23, true);
+    const auto lines = Helpers::readFile(23, false);
     vector<Node> clients{};
 
     for (auto &line: lines) {
@@ -45,19 +47,28 @@ int Day23::Part1() {
             B->connections.push_back(A);
     }
 
-    auto findLoop = [
-            ](const int i, const Node *current, const Node *checkFor, const auto &findLoopRef)-> vector<Node *> {
-        for (auto v: current->connections) {
-            if (auto result = findLoopRef(i + 1, v, checkFor, findLoopRef); result.size() > 0) {
-                result.push_back(current);
-                return result;
+    set<string> loops{};
+
+    queue<Node *> q{};
+
+    for (const auto &head: clients) {
+        for (auto child1: head.connections) {
+            for (auto child2: child1->connections) {
+                for (auto child3: child2->connections) {
+                    if (child3 == &head) {
+                        vector loop{child1, child2, child3};
+                        ranges::sort(loop);
+                        loops.insert(loop[0]->name + loop[1]->name + loop[2]->name);
+                    }
+                }
             }
         }
-    };
-
-    set<string> visited{};
-
+    }
 
     int total{0};
-    return 0;
+    for (auto i: loops) {
+        if (i[0] == 't' || i[2] == 't' || i[4] == 't') total++;
+    }
+
+    return total;
 }
