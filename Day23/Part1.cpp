@@ -1,28 +1,10 @@
 #include <queue>
 #include <set>
-#include <__algorithm/ranges_sort.h>
+#include <algorithm>
 
 #include "Day23.h"
 
-struct Node {
-    Node(const string name): name(name) {
-    }
-
-    string name;
-    vector<Node *> connections{};
-
-    bool operator==(const Node &other) const {
-        return name == other.name;
-    }
-
-    bool operator==(const string &other) const {
-        return name == other;
-    }
-
-    bool operator<(const Node &other) const {
-        return name < other.name;
-    }
-};
+#include "Node.h"
 
 int Day23::Part1() {
     const auto lines = Helpers::readFile(23, false);
@@ -33,7 +15,7 @@ int Day23::Part1() {
         const string b = line.substr(3, 2);
         if (ranges::find(clients, a) == clients.end()) clients.emplace_back(a);
         if (ranges::find(clients, b) == clients.end()) clients.emplace_back(b);
-        // cout << a << "<-->" << b << endl;
+        // cout << a << "<-->" << b << ";" << endl;
     }
 
     for (auto &line: lines) {

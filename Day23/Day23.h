@@ -10,7 +10,7 @@ class Day23 {
 public:
     static int Part1();
 
-    static int Part2();
+    static string Part2();
 };
 
 #endif //DAY23_H
