@@ -13,7 +13,7 @@ struct Node {
     string name;
     vector<Node *> connections{};
 
-    [[nodiscard]] bool connectsTo(const string& other)const {
+    [[nodiscard]] bool connectsTo(const string &other) const {
         for (const auto conn: connections) {
             if (*conn == other) return true;
         }
