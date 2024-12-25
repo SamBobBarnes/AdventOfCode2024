@@ -43,8 +43,8 @@ struct Instruction {
     string Out;
 };
 
-string Day24::Part1() {
-    const auto lines = Helpers::readFile(24, true);
+long Day24::Part1() {
+    const auto lines = Helpers::readFile(24, false);
 
     vector<Wire> wires{};
     vector<Instruction> instructions{};
@@ -107,5 +107,5 @@ string Day24::Part1() {
         output += o.Out ? "1" : "0";
     }
 
-    return output;
+    return strtol(output.c_str(), nullptr, 2);
 }
