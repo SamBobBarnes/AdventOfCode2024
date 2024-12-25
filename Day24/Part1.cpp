@@ -1,3 +1,4 @@
+#include <queue>
 #include <utility>
 #include <__algorithm/ranges_sort.h>
 
@@ -21,7 +22,7 @@ struct Wire {
     }
 
     bool operator<(const Wire &other) const {
-        return Name < other.Name;
+        return Name > other.Name;
     }
 };
 
@@ -62,11 +63,24 @@ string Day24::Part1() {
         }
     }
 
-    for (const auto &i: instructions) {
-        const auto a = &*ranges::find_if(wires, [i](const Wire &w) { return w.Name == i.A; });
-        const auto b = &*ranges::find_if(wires, [i](const Wire &w) { return w.Name == i.B; });
+    queue<Instruction *> q{};
+
+    for (auto &i: instructions) q.push(&i);
+
+    while (!q.empty()) {
+        auto i = q.front();
+        q.pop();
+        const auto aIt = ranges::find_if(wires, [i](const Wire &w) { return w.Name == i->A; });
+        const auto bIt = ranges::find_if(wires, [i](const Wire &w) { return w.Name == i->B; });
+        if (aIt == wires.end() || bIt == wires.end()) {
+            q.push(i);
+            continue;
+        }
+
+        const auto a = &*aIt;
+        const auto b = &*bIt;
         bool out;
-        switch (i.Op) {
+        switch (i->Op) {
             case AND:
                 out = a->Out && b->Out;
                 break;
@@ -76,7 +90,7 @@ string Day24::Part1() {
             case OR:
                 out = a->Out || b->Out;
         }
-        wires.emplace_back(i.Out, out);
+        wires.emplace_back(i->Out, out);
     }
 
     vector<Wire> outputs{};
