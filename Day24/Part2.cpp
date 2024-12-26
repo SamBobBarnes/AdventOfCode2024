@@ -13,13 +13,13 @@ int Day24::Part2() {
             auto wireInfo = Helpers::split(line, ": ");
             cout << wireInfo[0] << endl;
         } else {
-            auto insts = Helpers::split(inst, ' ');
-            auto A = insts[0];
-            auto B = insts[2];
-            auto Out = insts[4];
-            if (insts[1] == "AND") Op = AND;
-            else if (insts[1] == "OR") Op = OR;
-            else cout << "{{" << << "}}";
+            //     auto insts = Helpers::split(inst, ' ');
+            //     auto A = insts[0];
+            //     auto B = insts[2];
+            //     auto Out = insts[4];
+            //     if (insts[1] == "AND") Op = AND;
+            //     else if (insts[1] == "OR") Op = OR;
+            //     else cout << "{{" << << "}}";
         }
     }
     return 0;
